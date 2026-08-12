@@ -1,0 +1,11 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Introducción}{4}{0}{1}
+\beamer@sectionintoc {2}{Anatomía del dataset}{7}{0}{2}
+\beamer@sectionintoc {3}{Estadística descriptiva}{14}{0}{3}
+\beamer@sectionintoc {4}{Variables y distribuciones}{21}{0}{4}
+\beamer@sectionintoc {5}{Outliers}{27}{0}{5}
+\beamer@sectionintoc {6}{Relaciones}{32}{0}{6}
+\beamer@sectionintoc {7}{Visualización}{37}{0}{7}
+\beamer@sectionintoc {8}{Data Detective}{41}{0}{8}
+\beamer@sectionintoc {9}{Reto}{47}{0}{9}
+\beamer@sectionintoc {10}{Conclusiones}{50}{0}{10}

@@ -1,0 +1,15 @@
+\frametitle{Pista 1: Conocer la escena}
+Primero:
+\begin{lstlisting}
+df.head()
+df.shape
+df.info()
+df.describe()
+\end{lstlisting}
+Preguntas:
+\begin{enumerate}
+    \item ¿Cuántas observaciones existen?
+    \item ¿Qué variables tenemos?
+    \item ¿Hay datos faltantes?
+    \item ¿Hay valores imposibles?
+\end{enumerate}

@@ -1,0 +1,971 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+% ============================================================
+% CONFIGURACIÓN
+% ============================================================
+\usetheme{Madrid}
+\usecolortheme{default}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+% ============================================================
+% COLORES
+% ============================================================
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{codegreen}{RGB}{30,120,60}
+\definecolor{codeblue}{RGB}{30,70,150}
+\definecolor{codered}{RGB}{180,50,50}
+% ============================================================
+% PYTHON
+% ============================================================
+\lstdefinestyle{python}{
+    language=Python,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen},
+    stringstyle=\color{codered},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=5pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    tabsize=4
+}
+\lstset{style=python}
+% ============================================================
+% DATOS DE LA PRESENTACIÓN
+% ============================================================
+\title{EDA: Encontrar Patrones}
+\subtitle{Data Detective}
+\author{Análisis de Datos}
+\institute{Universidad Marista}
+\date{}
+% ============================================================
+% DOCUMENTO
+% ============================================================
+\begin{document}
+% ============================================================
+% PORTADA
+% ============================================================
+\begin{frame}
+    \titlepage
+\end{frame}
+% ============================================================
+% AGENDA
+% ============================================================
+\begin{frame}{Misión de hoy}
+\begin{center}
+\Large
+\textbf{Convertir datos en evidencia}
+\end{center}
+\vspace{0.4cm}
+Hoy aprenderemos a:
+\begin{itemize}
+    \item Conocer un dataset.
+    \item Resumir información.
+    \item Encontrar patrones.
+    \item Detectar anomalías.
+    \item Comparar grupos.
+    \item Encontrar relaciones.
+    \item Visualizar evidencia.
+    \item Formular hipótesis.
+    \item Defender conclusiones con datos.
+\end{itemize}
+\vspace{0.3cm}
+\begin{alertblock}{Pregunta central}
+¿Qué historia están contando nuestros datos?
+\end{alertblock}
+\end{frame}
+% ============================================================
+% TIMELINE
+% ============================================================
+\begin{frame}{Ruta de la investigación}
+\begin{enumerate}
+    \item Introducción a EDA
+    \item Anatomía del dataset
+    \item Estadística descriptiva
+    \item Variables y distribuciones
+    \item Outliers y anomalías
+    \item Descanso
+    \item Relaciones
+    \item Visualización
+    \item Data Detective
+    \item Reto por equipos
+    \item Conclusiones
+\end{enumerate}
+\end{frame}
+% ============================================================
+% BLOQUE 1
+% ============================================================
+\section{Introducción}
+\begin{frame}{¿Qué es EDA?}
+\textbf{EDA} significa:
+\begin{center}
+\Large
+\textbf{Exploratory Data Analysis}
+\end{center}
+Es el proceso de:
+\begin{itemize}
+    \item explorar,
+    \item resumir,
+    \item visualizar,
+    \item comparar,
+    \item cuestionar
+\end{itemize}
+un conjunto de datos antes de construir modelos.
+\begin{alertblock}{Idea importante}
+EDA no busca confirmar rápidamente una idea.
+Busca descubrir qué está pasando realmente.
+\end{alertblock}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{¿Por qué necesitamos EDA?}
+Imaginemos un dataset:
+\[
+X = \{x_1,x_2,\ldots,x_n\}
+\]
+Antes de aplicar Machine Learning necesitamos saber:
+\begin{itemize}
+    \item ¿Qué representa cada variable?
+    \item ¿Hay valores faltantes?
+    \item ¿Hay errores?
+    \item ¿Hay valores extremos?
+    \item ¿Cómo se distribuyen los datos?
+    \item ¿Existen grupos?
+    \item ¿Existen relaciones?
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{EDA no es solamente hacer gráficas}
+Un EDA completo combina:
+\[
+\boxed{
+\text{Datos}
++
+\text{Estadística}
++
+\text{Visualización}
++
+\text{Pensamiento crítico}
+}
+\]
+\begin{itemize}
+    \item Código para explorar.
+    \item Estadística para resumir.
+    \item Gráficas para observar.
+    \item Contexto para interpretar.
+\end{itemize}
+\end{frame}
+% ============================================================
+% BLOQUE 2
+% ============================================================
+\section{Anatomía del dataset}
+\begin{frame}{Anatomía de un dataset}
+Un dataset puede representarse como una matriz:
+\[
+X =
+\begin{bmatrix}
+x_{11} & x_{12} & \cdots & x_{1p}\\
+x_{21} & x_{22} & \cdots & x_{2p}\\
+\vdots & \vdots & \ddots & \vdots\\
+x_{n1} & x_{n2} & \cdots & x_{np}
+\end{bmatrix}
+\]
+Donde:
+\begin{itemize}
+    \item $n$ = número de observaciones.
+    \item $p$ = número de variables.
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Filas vs columnas}
+\begin{block}{Fila}
+Representa normalmente una observación.
+\end{block}
+Ejemplo:
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+Edad & Carrera & Semestre & Promedio\\
+\midrule
+20 & MAC & 6 & 8.4\\
+21 & MAC & 7 & 9.1\\
+19 & Actuaría & 4 & 7.8\\
+\bottomrule
+\end{tabular}
+\end{center}
+Cada fila representa un estudiante.
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Tipos de variables}
+\textbf{Numéricas}
+\begin{itemize}
+    \item Edad
+    \item Salario
+    \item Promedio
+    \item Temperatura
+\end{itemize}
+\vspace{0.3cm}
+\textbf{Categóricas}
+\begin{itemize}
+    \item Carrera
+    \item Ciudad
+    \item Sexo
+    \item Tipo de cliente
+\end{itemize}
+\vspace{0.3cm}
+\textbf{Fecha / tiempo}
+\begin{itemize}
+    \item Fecha de compra
+    \item Hora
+    \item Año
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}[fragile]{Primer contacto con Python}
+\begin{lstlisting}
+import pandas as pd
+df = pd.read_csv("dataset.csv")
+print(df.head())
+\end{lstlisting}
+Preguntas:
+\begin{itemize}
+    \item ¿Qué observamos?
+    \item ¿Qué columnas existen?
+    \item ¿Qué representa cada fila?
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}[fragile]{Tamaño del dataset}
+\begin{lstlisting}
+df.shape
+\end{lstlisting}
+Ejemplo:
+\begin{lstlisting}
+(1000, 8)
+\end{lstlisting}
+Significa:
+\[
+1000 \text{ observaciones}
+\]
+y
+\[
+8 \text{ variables}
+\]
+\begin{alertblock}{Pregunta de detective}
+¿1000 filas significa que tenemos 1000 personas?
+\end{alertblock}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}[fragile]{Conocer las columnas}
+\begin{lstlisting}
+df.columns
+\end{lstlisting}
+También:
+\begin{lstlisting}
+df.info()
+\end{lstlisting}
+Nos permite conocer:
+\begin{itemize}
+    \item nombres,
+    \item tipos de datos,
+    \item valores no nulos,
+    \item memoria utilizada.
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}[fragile]{Valores faltantes}
+\begin{lstlisting}
+df.isnull().sum()
+\end{lstlisting}
+Ejemplo:
+\begin{tabular}{cc}
+\toprule
+Variable & Faltantes\\
+\midrule
+Edad & 0\\
+Salario & 12\\
+Ciudad & 4\\
+Promedio & 0\\
+\bottomrule
+\end{tabular}
+\begin{alertblock}{Pregunta}
+¿Por qué podrían faltar esos datos?
+\end{alertblock}
+\end{frame}
+% ============================================================
+% BLOQUE 3
+% ============================================================
+\section{Estadística descriptiva}
+\begin{frame}{Estadística descriptiva}
+La estadística descriptiva busca resumir los datos.
+Tres preguntas:
+\begin{enumerate}
+    \item ¿Dónde están los datos?
+    \item ¿Qué tan dispersos están?
+    \item ¿Cómo se distribuyen?
+\end{enumerate}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Media}
+La media:
+\[
+\bar{x} =
+\frac{1}{n}
+\sum_{i=1}^{n}x_i
+\]
+Ejemplo:
+\[
+5,7,8,10
+\]
+\[
+\bar{x}
+=
+\frac{5+7+8+10}{4}
+=
+7.5
+\]
+\begin{alertblock}{Cuidado}
+La media puede verse afectada por valores extremos.
+\end{alertblock}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Mediana}
+La mediana es el valor central después de ordenar los datos.
+Ejemplo:
+\[
+2,4,5,7,100
+\]
+La mediana es:
+\[
+5
+\]
+La media es:
+\[
+23.6
+\]
+\begin{block}{Insight}
+La mediana puede representar mejor el centro cuando existen outliers.
+\end{block}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Moda}
+La moda es el valor más frecuente.
+Ejemplo:
+\[
+1,2,2,2,3,4,5
+\]
+Entonces:
+\[
+\text{Moda}=2
+\]
+Es especialmente útil para variables categóricas.
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Dispersión}
+No basta con conocer el promedio.
+Necesitamos saber qué tan separados están los datos.
+Medidas:
+\begin{itemize}
+    \item Rango.
+    \item Varianza.
+    \item Desviación estándar.
+    \item Rango intercuartílico.
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Desviación estándar}
+La desviación estándar mide qué tan alejados están los datos de la media.
+\[
+\sigma =
+\sqrt{
+\frac{1}{n}
+\sum_{i=1}^{n}
+(x_i-\bar{x})^2
+}
+\]
+Una desviación estándar grande implica mayor dispersión.
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}[fragile]{Pandas: resumen estadístico}
+\begin{lstlisting}
+df.describe()
+\end{lstlisting}
+Obtendremos:
+\begin{itemize}
+    \item count
+    \item mean
+    \item std
+    \item min
+    \item 25\%
+    \item 50\%
+    \item 75\%
+    \item max
+\end{itemize}
+\end{frame}
+% ============================================================
+% BLOQUE 4
+% ============================================================
+\section{Variables y distribuciones}
+\begin{frame}{¿Cómo se distribuyen los datos?}
+Una distribución responde:
+\begin{center}
+\Large
+¿Cómo se reparten los valores?
+\end{center}
+Podemos encontrar:
+\begin{itemize}
+    \item Distribuciones simétricas.
+    \item Distribuciones sesgadas.
+    \item Concentraciones.
+    \item Múltiples grupos.
+    \item Colas largas.
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Histograma}
+Un histograma divide los valores en intervalos llamados ``bins''.
+Ejemplo conceptual:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[->] (0,0) -- (8,0);
+\draw[->] (0,0) -- (0,4);
+\draw[fill=gray!30] (0.5,0) rectangle (1.5,1);
+\draw[fill=gray!30] (1.5,0) rectangle (2.5,2);
+\draw[fill=gray!30] (2.5,0) rectangle (3.5,3.5);
+\draw[fill=gray!30] (3.5,0) rectangle (4.5,3);
+\draw[fill=gray!30] (4.5,0) rectangle (5.5,2);
+\draw[fill=gray!30] (5.5,0) rectangle (6.5,1);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}[fragile]{Crear un histograma}
+\begin{lstlisting}
+import matplotlib.pyplot as plt
+df["edad"].hist(bins=10)
+plt.xlabel("Edad")
+plt.ylabel("Frecuencia")
+plt.title("Distribucion de edades")
+plt.show()
+\end{lstlisting}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Preguntas frente a un histograma}
+Nunca debemos solamente mirar la gráfica.
+Preguntemos:
+\begin{enumerate}
+    \item ¿Dónde se concentran los datos?
+    \item ¿Hay valores extremos?
+    \item ¿Es simétrica?
+    \item ¿Tiene una cola?
+    \item ¿Hay más de un pico?
+\end{enumerate}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Sesgo}
+Una distribución puede estar sesgada.
+\textbf{Sesgo positivo:}
+\[
+\text{Media} > \text{Mediana}
+\]
+\textbf{Sesgo negativo:}
+\[
+\text{Media} < \text{Mediana}
+\]
+Esto nos ayuda a interpretar correctamente la media.
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Boxplot}
+El boxplot resume:
+\begin{itemize}
+    \item mínimo,
+    \item primer cuartil,
+    \item mediana,
+    \item tercer cuartil,
+    \item máximo,
+    \item posibles outliers.
+\end{itemize}
+El rango intercuartílico es:
+\[
+IQR = Q_3-Q_1
+\]
+\end{frame}
+% ============================================================
+% BLOQUE 5
+% ============================================================
+\section{Outliers}
+\begin{frame}{¿Qué es un outlier?}
+Un outlier es una observación que se encuentra muy alejada del comportamiento habitual.
+Ejemplo:
+\[
+20,\;21,\;22,\;23,\;24,\;120
+\]
+El valor:
+\[
+120
+\]
+llama inmediatamente nuestra atención.
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Método del IQR}
+Definimos:
+\[
+IQR=Q_3-Q_1
+\]
+Límite inferior:
+\[
+Q_1-1.5(IQR)
+\]
+Límite superior:
+\[
+Q_3+1.5(IQR)
+\]
+Los valores fuera de estos límites pueden considerarse outliers.
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}[fragile]{Detectar outliers con Python}
+\begin{lstlisting}
+Q1 = df["salario"].quantile(0.25)
+Q3 = df["salario"].quantile(0.75)
+IQR = Q3 - Q1
+limite_inf = Q1 - 1.5 * IQR
+limite_sup = Q3 + 1.5 * IQR
+outliers = df[
+    (df["salario"] < limite_inf) |
+    (df["salario"] > limite_sup)
+]
+print(outliers)
+\end{lstlisting}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Un outlier no significa error}
+Un valor extremo puede ser:
+\begin{itemize}
+    \item Error de captura.
+    \item Error de medición.
+    \item Fraude.
+    \item Evento excepcional.
+    \item Cliente especial.
+    \item Fenómeno real.
+\end{itemize}
+\begin{alertblock}{Regla}
+No eliminamos un dato solamente porque sea extremo.
+\end{alertblock}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{DESCANSO}
+\begin{center}
+\Huge 10 minutos
+\vspace{0.5cm}
+\Large
+Regresamos para investigar relaciones.
+\end{center}
+\end{frame}
+% ============================================================
+% BLOQUE 6
+% ============================================================
+\section{Relaciones}
+\begin{frame}{Relaciones entre variables}
+Ahora pasamos de:
+\[
+X
+\]
+a:
+\[
+X \longrightarrow Y
+\]
+Preguntamos:
+\begin{center}
+¿Existe una relación entre dos variables?
+\end{center}
+Ejemplos:
+\begin{itemize}
+    \item Horas de estudio $\rightarrow$ promedio.
+    \item Publicidad $\rightarrow$ ventas.
+    \item Edad $\rightarrow$ salario.
+    \item Temperatura $\rightarrow$ consumo eléctrico.
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Covarianza}
+La covarianza mide cómo cambian dos variables conjuntamente.
+\[
+Cov(X,Y)
+=
+E[(X-\mu_X)(Y-\mu_Y)]
+\]
+Interpretación:
+\begin{itemize}
+    \item Positiva: tienden a crecer juntas.
+    \item Negativa: una crece mientras otra disminuye.
+    \item Cercana a cero: poca relación lineal.
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Correlación}
+El coeficiente de Pearson:
+\[
+r =
+\frac{Cov(X,Y)}
+{\sigma_X\sigma_Y}
+\]
+Su rango es:
+\[
+-1\leq r\leq1
+\]
+\begin{itemize}
+    \item $r\approx1$: relación positiva fuerte.
+    \item $r\approx-1$: relación negativa fuerte.
+    \item $r\approx0$: poca relación lineal.
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Correlación no implica causalidad}
+Si encontramos:
+\[
+X \leftrightarrow Y
+\]
+no significa automáticamente:
+\[
+X \rightarrow Y
+\]
+Puede existir:
+\begin{itemize}
+    \item Una tercera variable.
+    \item Una relación accidental.
+    \item Sesgo de selección.
+    \item Datos insuficientes.
+\end{itemize}
+\begin{alertblock}{Data Detective}
+Una correlación es una pista, no una sentencia.
+\end{alertblock}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}[fragile]{Matriz de correlación}
+\begin{lstlisting}
+corr = df.corr(numeric_only=True)
+print(corr)
+\end{lstlisting}
+Podemos buscar:
+\[
+|r| \approx 1
+\]
+para encontrar relaciones lineales fuertes.
+\end{frame}
+% ============================================================
+% BLOQUE 7
+% ============================================================
+\section{Visualización}
+\begin{frame}{Visualizar es construir evidencia}
+Una gráfica debe responder una pregunta.
+No:
+\begin{center}
+``Hagamos una gráfica.''
+\end{center}
+Sino:
+\begin{center}
+``Quiero comprobar qué ocurre con X cuando Y cambia.''
+\end{center}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{¿Qué gráfica usar?}
+\begin{tabular}{ll}
+\toprule
+Pregunta & Gráfica\\
+\midrule
+¿Cómo se distribuye? & Histograma\\
+¿Hay outliers? & Boxplot\\
+¿Dos variables se relacionan? & Scatterplot\\
+¿Cómo cambia en el tiempo? & Línea\\
+¿Comparar categorías? & Barras\\
+¿Muchas correlaciones? & Heatmap\\
+\bottomrule
+\end{tabular}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}[fragile]{Scatterplot}
+\begin{lstlisting}
+plt.scatter(
+    df["horas_estudio"],
+    df["promedio"]
+)
+plt.xlabel("Horas de estudio")
+plt.ylabel("Promedio")
+plt.show()
+\end{lstlisting}
+Pregunta:
+\begin{center}
+¿Los estudiantes que estudian más obtienen mejores resultados?
+\end{center}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Una buena visualización}
+Debe tener:
+\begin{itemize}
+    \item Título.
+    \item Ejes.
+    \item Unidades.
+    \item Escala adecuada.
+    \item Leyenda cuando sea necesaria.
+    \item Contexto.
+\end{itemize}
+\begin{alertblock}{Principio}
+La gráfica debe hacer evidente el patrón, no esconderlo.
+\end{alertblock}
+\end{frame}
+% ============================================================
+% BLOQUE 8
+% ============================================================
+\section{Data Detective}
+\begin{frame}{Caso: El misterio del rendimiento}
+Tenemos información de estudiantes:
+\begin{itemize}
+    \item Edad.
+    \item Horas de estudio.
+    \item Asistencia.
+    \item Promedio.
+    \item Carrera.
+    \item Horas de sueño.
+\end{itemize}
+\begin{block}{Misión}
+Descubrir qué factores parecen estar relacionados con el rendimiento académico.
+\end{block}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}[fragile]{Pista 1: Conocer la escena}
+Primero:
+\begin{lstlisting}
+df.head()
+df.shape
+df.info()
+df.describe()
+\end{lstlisting}
+Preguntas:
+\begin{enumerate}
+    \item ¿Cuántas observaciones existen?
+    \item ¿Qué variables tenemos?
+    \item ¿Hay datos faltantes?
+    \item ¿Hay valores imposibles?
+\end{enumerate}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Pista 2: Distribuciones}
+Analizar:
+\begin{itemize}
+    \item Edad.
+    \item Horas de estudio.
+    \item Promedio.
+    \item Horas de sueño.
+\end{itemize}
+Utilizar:
+\begin{itemize}
+    \item Histogramas.
+    \item Boxplots.
+    \item Estadística descriptiva.
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Pista 3: Relaciones}
+Investigar:
+\[
+HorasEstudio \leftrightarrow Promedio
+\]
+\[
+Asistencia \leftrightarrow Promedio
+\]
+\[
+Sueño \leftrightarrow Promedio
+\]
+Utilizar:
+\begin{itemize}
+    \item Scatterplots.
+    \item Correlaciones.
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Pista 4: El sospechoso}
+Encontrar:
+\begin{itemize}
+    \item El estudiante con menor promedio.
+    \item El estudiante con mayor promedio.
+    \item El estudiante con más horas de estudio.
+    \item Valores extremos.
+\end{itemize}
+Después preguntar:
+\begin{center}
+¿Son errores o casos reales?
+\end{center}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Pista 5: La hipótesis}
+Cada equipo debe formular una hipótesis.
+Ejemplo:
+\begin{quote}
+``Los estudiantes que estudian más horas tienden a obtener mejores promedios.''
+\end{quote}
+Después:
+\[
+\text{Hipótesis}
+\rightarrow
+\text{Evidencia}
+\rightarrow
+\text{Conclusión}
+\]
+\end{frame}
+% ============================================================
+% BLOQUE 9
+% ============================================================
+\section{Reto}
+\begin{frame}{Reto por equipos}
+\begin{center}
+\Huge
+\textbf{DATA DETECTIVE}
+\end{center}
+\vspace{0.4cm}
+Cada equipo recibirá un dataset.
+Su misión:
+\begin{enumerate}
+    \item Explorar.
+    \item Encontrar un patrón.
+    \item Encontrar una anomalía.
+    \item Encontrar una relación.
+    \item Crear evidencia visual.
+    \item Presentar una conclusión.
+\end{enumerate}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Reglas del reto}
+Cada equipo debe entregar:
+\begin{enumerate}
+    \item Una pregunta.
+    \item Una hipótesis.
+    \item Una estadística.
+    \item Una gráfica.
+    \item Un hallazgo.
+    \item Una anomalía.
+    \item Una conclusión.
+\end{enumerate}
+\begin{alertblock}{Importante}
+No gana quien haga más gráficas.
+Gana quien encuentre una historia interesante y pueda demostrarla.
+\end{alertblock}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Plantilla de investigación}
+\begin{block}{Pregunta}
+¿Qué queremos descubrir?
+\end{block}
+\begin{block}{Hipótesis}
+¿Qué creemos que ocurre?
+\end{block}
+\begin{block}{Evidencia}
+¿Qué muestran los datos?
+\end{block}
+\begin{block}{Conclusión}
+¿Qué podemos afirmar?
+\end{block}
+\begin{block}{Limitación}
+¿Qué todavía NO podemos afirmar?
+\end{block}
+\end{frame}
+% ============================================================
+% BLOQUE 10
+% ============================================================
+\section{Conclusiones}
+\begin{frame}{¿Qué aprendimos?}
+EDA nos permite pasar de:
+\begin{center}
+\Large
+\textbf{Datos}
+\end{center}
+a:
+\[
+\boxed{
+\text{Datos}
+\rightarrow
+\text{Patrones}
+\rightarrow
+\text{Evidencia}
+\rightarrow
+\text{Hipótesis}
+}
+\]
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{El proceso completo}
+\begin{enumerate}
+    \item Cargar los datos.
+    \item Conocer las variables.
+    \item Revisar calidad.
+    \item Describir estadísticamente.
+    \item Analizar distribuciones.
+    \item Detectar outliers.
+    \item Analizar relaciones.
+    \item Visualizar.
+    \item Formular hipótesis.
+    \item Comunicar hallazgos.
+\end{enumerate}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Checklist del Data Scientist}
+Antes de modelar:
+\begin{itemize}
+    \item[$\square$] ¿Conozco mi dataset?
+    \item[$\square$] ¿Sé qué representa cada variable?
+    \item[$\square$] ¿Revisé valores faltantes?
+    \item[$\square$] ¿Revisé duplicados?
+    \item[$\square$] ¿Encontré valores extraños?
+    \item[$\square$] ¿Conozco las distribuciones?
+    \item[$\square$] ¿Busqué relaciones?
+    \item[$\square$] ¿Visualicé los patrones?
+    \item[$\square$] ¿Tengo hipótesis?
+    \item[$\square$] ¿Puedo defender mis conclusiones?
+\end{itemize}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{La idea que deben recordar}
+\begin{center}
+\Huge
+\textbf{No analices datos\\
+para hacer gráficas.}
+\vspace{0.5cm}
+\Large
+Analiza datos para\\
+\textbf{hacer preguntas mejores.}
+\end{center}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}{Próxima misión}
+\begin{center}
+\Huge
+\textbf{EDA $\rightarrow$ Machine Learning}
+\vspace{0.5cm}
+\Large
+Una vez que conocemos nuestros datos...
+\vspace{0.3cm}
+\[
+\text{¿Podemos hacer predicciones?}
+\]
+\end{center}
+\end{frame}
+% ------------------------------------------------------------
+\begin{frame}
+\begin{center}
+\Huge
+\textbf{Preguntas}
+\vspace{1cm}
+\Large
+¿Quién encontró el patrón más interesante?
+\end{center}
+\end{frame}
+\end{document}
