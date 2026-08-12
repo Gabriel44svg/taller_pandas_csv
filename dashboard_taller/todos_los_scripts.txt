@@ -1,0 +1,9 @@
+python 01_exploracion.py
+python 02_preparacion.py
+python 03_kpis.py
+python 04_barras_producto.py
+python 05_histograma.py
+python 06_tendencia_temporal.py
+python 07_ventas_region.py
+streamlit run 08_dashboard_streamlit.py
+streamlit run 09_dashboard_streamlit_filtros.py
