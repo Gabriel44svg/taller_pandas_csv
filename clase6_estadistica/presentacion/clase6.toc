@@ -1,0 +1,31 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Introducción}{4}{0}{1}
+\beamer@sectionintoc {2}{Descriptiva e inferencial}{7}{0}{2}
+\beamer@sectionintoc {3}{Población y muestra}{10}{0}{3}
+\beamer@sectionintoc {4}{Sesgo de muestreo}{14}{0}{4}
+\beamer@sectionintoc {5}{Tendencia central}{17}{0}{5}
+\beamer@sectionintoc {6}{Dispersión}{21}{0}{6}
+\beamer@sectionintoc {7}{Percentiles}{27}{0}{7}
+\beamer@sectionintoc {8}{Distribuciones}{29}{0}{8}
+\beamer@sectionintoc {9}{Distribución normal}{32}{0}{9}
+\beamer@sectionintoc {10}{Z-score}{35}{0}{10}
+\beamer@sectionintoc {11}{Distribuciones sesgadas}{37}{0}{11}
+\beamer@sectionintoc {12}{Muestreo}{39}{0}{12}
+\beamer@sectionintoc {13}{Ley de los Grandes Números}{44}{0}{13}
+\beamer@sectionintoc {14}{Teorema Central del Límite}{45}{0}{14}
+\beamer@sectionintoc {15}{Error estándar}{49}{0}{15}
+\beamer@sectionintoc {16}{Intervalos de confianza}{52}{0}{16}
+\beamer@sectionintoc {17}{Hipótesis estadísticas}{59}{0}{17}
+\beamer@sectionintoc {18}{Valor p}{63}{0}{18}
+\beamer@sectionintoc {19}{Errores estadísticos}{66}{0}{19}
+\beamer@sectionintoc {20}{Significancia práctica}{69}{0}{20}
+\beamer@sectionintoc {21}{Live Coding}{71}{0}{21}
+\beamer@sectionintoc {22}{Tamaño del efecto}{83}{0}{22}
+\beamer@sectionintoc {23}{Correlación}{84}{0}{23}
+\beamer@sectionintoc {24}{Statistical Detective Challenge}{88}{0}{24}
+\beamer@sectionintoc {25}{Errores comunes}{98}{0}{25}
+\beamer@sectionintoc {26}{Pipeline estadístico}{102}{0}{26}
+\beamer@sectionintoc {27}{Herramientas}{103}{0}{27}
+\beamer@sectionintoc {28}{Ideas clave}{105}{0}{28}
+\beamer@sectionintoc {29}{Volvamos al problema}{106}{0}{29}
+\beamer@sectionintoc {30}{Puente a Series Temporales}{108}{0}{30}

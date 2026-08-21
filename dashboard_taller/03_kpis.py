@@ -41,13 +41,13 @@ print("Unidades:", unidades)
 # ---------------------------------------------------------------
 
 # EXTRA
-# df["Mes"] = df["Fecha"].dt.to_period("M")
-# ventas_mes = df.groupby("Mes")["Ventas"].sum()
-# crecimiento = ventas_mes.pct_change() * 100
-# print("\nVentas por mes:")
-# print(ventas_mes)
-# print("\nCrecimiento % mes a mes:")
-# print(crecimiento.round(1))
+df["Mes"] = df["Fecha"].dt.to_period("M")
+ventas_mes = df.groupby("Mes")["Ventas"].sum()
+crecimiento = ventas_mes.pct_change() * 100
+print("\nVentas por mes:")
+print(ventas_mes)
+print("\nCrecimiento % mes a mes:")
+print(crecimiento.round(1))
 #
 # Con estos datos, julio 2026 debería mostrar el salto más grande del
 # periodo (efecto de la campaña) — buen momento para conectar con la

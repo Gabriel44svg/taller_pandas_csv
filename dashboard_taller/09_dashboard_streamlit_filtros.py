@@ -52,20 +52,20 @@ st.metric(
 # ---------------------------------------------------------------
 
 # EXTRA
-# productos = df_filtrado["Producto"].unique()
-# producto = st.selectbox("Selecciona un producto (opcional)", ["Todos"] + list(productos))
+productos = df_filtrado["Producto"].unique()
+producto = st.selectbox("Selecciona un producto (opcional)", ["Todos"] + list(productos))
 #
-# if producto != "Todos":
-#     df_filtrado = df_filtrado[df_filtrado["Producto"] == producto]
+if producto != "Todos":
+     df_filtrado = df_filtrado[df_filtrado["Producto"] == producto]
 #
-# ventas_producto_filtrado = (
-#     df_filtrado.groupby("Producto")["Ventas"]
-#                .sum()
-#                .sort_values()
-# )
-#
-# st.subheader(f"Ventas por producto — {region}")
-# st.bar_chart(ventas_producto_filtrado)
+ventas_producto_filtrado = (
+    df_filtrado.groupby("Producto")["Ventas"]
+                .sum()
+                .sort_values()
+ )
+
+st.subheader(f"Ventas por producto — {region}")
+st.bar_chart(ventas_producto_filtrado)
 
 # ---------------------------------------------------------------
 # Frase de la diapositiva para cerrar este bloque:

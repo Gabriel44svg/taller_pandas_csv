@@ -1,0 +1,16 @@
+\frametitle{Código de apoyo}
+
+\begin{lstlisting}
+resumen = (
+    df.groupby("grupo")["gasto"]
+      .agg([
+          "count",
+          "mean",
+          "median",
+          "std"
+      ])
+)
+
+print(resumen)
+\end{lstlisting}
+

@@ -1,0 +1,91 @@
+id_alumno,id_curso,calificacion,nombre,carrera,curso,profesor
+6,202,82,Alumno_6,Administración,Programación I,Prof_2
+14,205,69,Alumno_14,Actuaría,Machine Learning,Prof_5
+1,201,83,Alumno_1,Psicología,Estadística I,Prof_1
+8,207,87,Alumno_8,Diseño,Álgebra Lineal,Prof_7
+903,204,93,,,Cálculo II,Prof_4
+25,202,79,Alumno_25,Actuaría,Programación I,Prof_2
+16,204,60,Alumno_16,Diseño,Cálculo II,Prof_4
+23,206,71,Alumno_23,Ing. Sistemas,Ética Profesional,Prof_6
+9,203,94,Alumno_9,Diseño,Bases de Datos,Prof_3
+12,201,81,Alumno_12,Administración,Estadística I,Prof_1
+11,201,84,Alumno_11,Psicología,Estadística I,Prof_1
+23,206,78,Alumno_23,Ing. Sistemas,Ética Profesional,Prof_6
+24,201,66,Alumno_24,Ing. Sistemas,Estadística I,Prof_1
+25,205,95,Alumno_25,Actuaría,Machine Learning,Prof_5
+19,203,90,Alumno_19,Actuaría,Bases de Datos,Prof_3
+13,206,99,Alumno_13,Ing. Sistemas,Ética Profesional,Prof_6
+14,201,94,Alumno_14,Actuaría,Estadística I,Prof_1
+25,207,71,Alumno_25,Actuaría,Álgebra Lineal,Prof_7
+8,205,70,Alumno_8,Diseño,Machine Learning,Prof_5
+9,204,69,Alumno_9,Diseño,Cálculo II,Prof_4
+23,202,96,Alumno_23,Ing. Sistemas,Programación I,Prof_2
+10,207,82,Alumno_10,Psicología,Álgebra Lineal,Prof_7
+6,203,78,Alumno_6,Administración,Bases de Datos,Prof_3
+15,204,98,Alumno_15,Administración,Cálculo II,Prof_4
+9,203,84,Alumno_9,Diseño,Bases de Datos,Prof_3
+23,202,96,Alumno_23,Ing. Sistemas,Programación I,Prof_2
+23,203,99,Alumno_23,Ing. Sistemas,Bases de Datos,Prof_3
+8,202,63,Alumno_8,Diseño,Programación I,Prof_2
+14,201,74,Alumno_14,Actuaría,Estadística I,Prof_1
+25,203,89,Alumno_25,Actuaría,Bases de Datos,Prof_3
+19,201,92,Alumno_19,Actuaría,Estadística I,Prof_1
+6,203,65,Alumno_6,Administración,Bases de Datos,Prof_3
+15,207,72,Alumno_15,Administración,Álgebra Lineal,Prof_7
+16,202,81,Alumno_16,Diseño,Programación I,Prof_2
+17,201,91,Alumno_17,Actuaría,Estadística I,Prof_1
+1,201,64,Alumno_1,Psicología,Estadística I,Prof_1
+8,204,84,Alumno_8,Diseño,Cálculo II,Prof_4
+22,202,71,Alumno_22,Actuaría,Programación I,Prof_2
+7,204,68,Alumno_7,Ing. Sistemas,Cálculo II,Prof_4
+901,201,80,,,Estadística I,Prof_1
+9,203,76,Alumno_9,Diseño,Bases de Datos,Prof_3
+5,203,85,Alumno_5,Ing. Sistemas,Bases de Datos,Prof_3
+4,204,72,Alumno_4,Ing. Sistemas,Cálculo II,Prof_4
+9,204,92,Alumno_9,Diseño,Cálculo II,Prof_4
+22,206,63,Alumno_22,Actuaría,Ética Profesional,Prof_6
+1,204,94,Alumno_1,Psicología,Cálculo II,Prof_4
+8,206,61,Alumno_8,Diseño,Ética Profesional,Prof_6
+2,204,89,Alumno_2,Administración,Cálculo II,Prof_4
+15,202,73,Alumno_15,Administración,Programación I,Prof_2
+7,202,75,Alumno_7,Ing. Sistemas,Programación I,Prof_2
+20,203,60,Alumno_20,Ing. Sistemas,Bases de Datos,Prof_3
+15,205,88,Alumno_15,Administración,Machine Learning,Prof_5
+20,202,66,Alumno_20,Ing. Sistemas,Programación I,Prof_2
+906,207,86,,,Álgebra Lineal,Prof_7
+11,204,89,Alumno_11,Psicología,Cálculo II,Prof_4
+22,207,93,Alumno_22,Actuaría,Álgebra Lineal,Prof_7
+12,205,88,Alumno_12,Administración,Machine Learning,Prof_5
+24,203,72,Alumno_24,Ing. Sistemas,Bases de Datos,Prof_3
+25,202,89,Alumno_25,Actuaría,Programación I,Prof_2
+15,206,93,Alumno_15,Administración,Ética Profesional,Prof_6
+17,203,72,Alumno_17,Actuaría,Bases de Datos,Prof_3
+7,202,64,Alumno_7,Ing. Sistemas,Programación I,Prof_2
+904,207,95,,,Álgebra Lineal,Prof_7
+17,204,65,Alumno_17,Actuaría,Cálculo II,Prof_4
+23,201,83,Alumno_23,Ing. Sistemas,Estadística I,Prof_1
+7,204,69,Alumno_7,Ing. Sistemas,Cálculo II,Prof_4
+20,204,65,Alumno_20,Ing. Sistemas,Cálculo II,Prof_4
+12,207,91,Alumno_12,Administración,Álgebra Lineal,Prof_7
+5,205,65,Alumno_5,Ing. Sistemas,Machine Learning,Prof_5
+5,202,86,Alumno_5,Ing. Sistemas,Programación I,Prof_2
+15,202,87,Alumno_15,Administración,Programación I,Prof_2
+8,205,62,Alumno_8,Diseño,Machine Learning,Prof_5
+3,201,66,Alumno_3,Administración,Estadística I,Prof_1
+11,203,91,Alumno_11,Psicología,Bases de Datos,Prof_3
+17,201,80,Alumno_17,Actuaría,Estadística I,Prof_1
+8,201,64,Alumno_8,Diseño,Estadística I,Prof_1
+24,207,99,Alumno_24,Ing. Sistemas,Álgebra Lineal,Prof_7
+20,201,70,Alumno_20,Ing. Sistemas,Estadística I,Prof_1
+13,201,60,Alumno_13,Ing. Sistemas,Estadística I,Prof_1
+24,207,96,Alumno_24,Ing. Sistemas,Álgebra Lineal,Prof_7
+11,202,60,Alumno_11,Psicología,Programación I,Prof_2
+4,206,82,Alumno_4,Ing. Sistemas,Ética Profesional,Prof_6
+1,201,99,Alumno_1,Psicología,Estadística I,Prof_1
+24,202,83,Alumno_24,Ing. Sistemas,Programación I,Prof_2
+24,201,83,Alumno_24,Ing. Sistemas,Estadística I,Prof_1
+19,205,75,Alumno_19,Actuaría,Machine Learning,Prof_5
+3,205,65,Alumno_3,Administración,Machine Learning,Prof_5
+8,204,82,Alumno_8,Diseño,Cálculo II,Prof_4
+2,202,95,Alumno_2,Administración,Programación I,Prof_2
+2,201,63,Alumno_2,Administración,Estadística I,Prof_1

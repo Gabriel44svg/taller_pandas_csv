@@ -1,0 +1,3838 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% ============================================================
+% CLASE 6 - ESTADÍSTICA PARA DATA SCIENCE
+% Diplomado de Python y Análisis de Datos
+% Universidad Marista
+%
+% Compatible con:
+% Overleaf + pdfLaTeX
+% ============================================================
+
+% ============================================================
+% CODIFICACIÓN
+% ============================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{lmodern}
+
+% ============================================================
+% PAQUETES
+% ============================================================
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{listings}
+
+\usetikzlibrary{
+    positioning,
+    arrows.meta,
+    shapes.geometric,
+    calc
+}
+
+% ============================================================
+% TEMA BEAMER
+% ============================================================
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\setbeamertemplate{navigation symbols}{}
+
+% ============================================================
+% COLORES
+% ============================================================
+
+\definecolor{azulmarista}{RGB}{18,67,115}
+\definecolor{azulclaro}{RGB}{224,238,250}
+
+\definecolor{verde}{RGB}{38,120,85}
+\definecolor{verdeclaro}{RGB}{225,245,235}
+
+\definecolor{naranja}{RGB}{225,125,35}
+\definecolor{naranjaclaro}{RGB}{253,237,218}
+
+\definecolor{morado}{RGB}{104,72,150}
+\definecolor{moradoclaro}{RGB}{238,230,248}
+
+\definecolor{gris}{RGB}{80,80,80}
+\definecolor{grisclaro}{RGB}{245,245,245}
+
+\definecolor{rojo}{RGB}{175,50,50}
+\definecolor{rojoclaro}{RGB}{250,230,230}
+
+% ============================================================
+% COLORES BEAMER
+% ============================================================
+
+\setbeamercolor{structure}{
+    fg=azulmarista
+}
+
+\setbeamercolor{frametitle}{
+    fg=white,
+    bg=azulmarista
+}
+
+\setbeamercolor{title}{
+    fg=azulmarista
+}
+
+\setbeamercolor{subtitle}{
+    fg=gris
+}
+
+\setbeamercolor{block title}{
+    fg=white,
+    bg=azulmarista
+}
+
+\setbeamercolor{block body}{
+    bg=azulclaro
+}
+
+\setbeamercolor{block title example}{
+    fg=white,
+    bg=verde
+}
+
+\setbeamercolor{block body example}{
+    bg=verdeclaro
+}
+
+\setbeamercolor{block title alerted}{
+    fg=white,
+    bg=rojo
+}
+
+\setbeamercolor{block body alerted}{
+    bg=rojoclaro
+}
+
+% ============================================================
+% PIE DE PÁGINA
+% ============================================================
+
+\setbeamertemplate{footline}{
+    \leavevmode
+    \hbox{
+        \begin{beamercolorbox}[
+            wd=.74\paperwidth,
+            ht=2.7ex,
+            dp=1.1ex,
+            leftskip=1em
+        ]{author in head/foot}
+            Diplomado de Python y Análisis de Datos
+        \end{beamercolorbox}
+        \begin{beamercolorbox}[
+            wd=.26\paperwidth,
+            ht=2.7ex,
+            dp=1.1ex,
+            center
+        ]{date in head/foot}
+            \insertframenumber/\inserttotalframenumber
+        \end{beamercolorbox}
+    }
+}
+
+% ============================================================
+% CÓDIGO PYTHON
+% ============================================================
+
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    backgroundcolor=\color{grisclaro},
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{azulmarista}\bfseries,
+    commentstyle=\color{verde},
+    stringstyle=\color{morado},
+    numberstyle=\tiny\color{gris},
+    numbers=left,
+    numbersep=5pt,
+    breaklines=true,
+    breakatwhitespace=false,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{azulmarista}
+}
+
+\lstset{
+    style=pythonstyle
+}
+
+% ============================================================
+% INFORMACIÓN
+% ============================================================
+
+\title{Estadística para Data Science}
+
+\subtitle{
+Clase 6\\
+De describir datos a cuantificar incertidumbre
+}
+
+\author{
+Diplomado de Python y Análisis de Datos
+}
+
+\institute{
+Universidad Marista
+}
+
+\date{2026}
+
+% ============================================================
+% DOCUMENTO
+% ============================================================
+
+\begin{document}
+
+% ============================================================
+% PORTADA
+% ============================================================
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% ============================================================
+% OBJETIVO GENERAL
+% ============================================================
+
+\begin{frame}{Objetivo de la sesión}
+
+Al finalizar la clase, el estudiante será capaz de:
+
+\begin{itemize}
+
+    \item distinguir entre población y muestra;
+
+    \item diferenciar parámetros y estadísticos;
+
+    \item interpretar medidas de tendencia central y dispersión;
+
+    \item analizar distribuciones;
+
+    \item comprender el Teorema Central del Límite;
+
+    \item interpretar el error estándar;
+
+    \item construir intervalos de confianza;
+
+    \item formular hipótesis estadísticas;
+
+    \item interpretar correctamente un valor $p$;
+
+    \item comparar dos grupos mediante una prueba t;
+
+    \item distinguir significancia estadística de relevancia práctica.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+% CRONOGRAMA
+% ============================================================
+
+\begin{frame}{Ruta de las 3 horas}
+
+\scriptsize
+
+\begin{table}
+\centering
+
+\begin{tabular}{p{2.2cm}p{8.7cm}}
+\toprule
+
+\textbf{Tiempo} &
+\textbf{Tema} \\
+
+\midrule
+
+0:00--0:10 &
+Problema inicial: ¿una diferencia observada es real? \\
+
+0:10--0:25 &
+Población, muestra, parámetros y estadísticos \\
+
+0:25--0:45 &
+Media, mediana, varianza, desviación y percentiles \\
+
+0:45--1:00 &
+Distribuciones y distribución normal \\
+
+1:00--1:20 &
+Muestreo y Teorema Central del Límite \\
+
+1:20--1:30 &
+Error estándar e introducción a inferencia \\
+
+1:30--1:40 &
+Descanso \\
+
+1:40--1:55 &
+Intervalos de confianza \\
+
+1:55--2:15 &
+Hipótesis nula, alternativa y valor $p$ \\
+
+2:15--2:30 &
+Prueba t y comparación de medias \\
+
+2:30--2:40 &
+Correlación y significancia práctica \\
+
+2:40--2:55 &
+Statistical Detective Challenge \\
+
+2:55--3:00 &
+Conclusiones y conexión con Series Temporales \\
+
+\bottomrule
+
+\end{tabular}
+
+\end{table}
+
+\end{frame}
+
+% ============================================================
+\section{Introducción}
+% ============================================================
+
+\begin{frame}{El problema inicial}
+
+Supongamos que una empresa prueba dos versiones de una página web.
+
+\vspace{0.3cm}
+
+\begin{center}
+
+\begin{tabular}{lcc}
+\toprule
+
+&
+\textbf{Versión A}
+&
+\textbf{Versión B} \\
+
+\midrule
+
+Conversión &
+12.1\% &
+13.0\% \\
+
+\bottomrule
+\end{tabular}
+
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Pregunta}
+¿Podemos afirmar inmediatamente que la versión B es mejor?
+\end{alertblock}
+
+\vspace{0.3cm}
+
+No necesariamente.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Qué nos falta saber?}
+
+Una diferencia observada puede depender de:
+
+\begin{itemize}
+
+    \item tamaño de muestra;
+
+    \item variabilidad de los datos;
+
+    \item forma de la distribución;
+
+    \item diseño del experimento;
+
+    \item sesgo de selección;
+
+    \item incertidumbre muestral;
+
+    \item magnitud real del efecto.
+
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{block}{Idea central}
+La estadística nos ayuda a distinguir entre señal y ruido.
+\end{block}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{De EDA a inferencia}
+
+\begin{center}
+
+\begin{tikzpicture}[
+node distance=0.7cm,
+every node/.style={
+draw,
+rounded corners,
+fill=azulclaro,
+minimum width=1.8cm,
+minimum height=0.7cm,
+font=\small
+}
+]
+
+\node (datos) {Datos};
+
+\node[right=of datos] (eda) {EDA};
+
+\node[right=of eda] (patron) {Patrón};
+
+\node[right=of patron] (estadistica) {Estadística};
+
+\node[below=1cm of estadistica] (evidencia) {Evidencia};
+
+\node[left=of evidencia] (decision) {Decisión};
+
+\draw[-{Latex}] (datos) -- (eda);
+
+\draw[-{Latex}] (eda) -- (patron);
+
+\draw[-{Latex}] (patron) -- (estadistica);
+
+\draw[-{Latex}] (estadistica) -- (evidencia);
+
+\draw[-{Latex}] (evidencia) -- (decision);
+
+\end{tikzpicture}
+
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{block}{Pregunta}
+¿El patrón que observamos es suficientemente sólido para tomar una decisión?
+\end{block}
+
+\end{frame}
+
+% ============================================================
+\section{Descriptiva e inferencial}
+% ============================================================
+
+\begin{frame}{Estadística descriptiva}
+
+La estadística descriptiva resume los datos observados.
+
+\vspace{0.3cm}
+
+Herramientas:
+
+\begin{itemize}
+
+    \item media;
+
+    \item mediana;
+
+    \item moda;
+
+    \item varianza;
+
+    \item desviación estándar;
+
+    \item percentiles;
+
+    \item tablas;
+
+    \item visualizaciones.
+
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{exampleblock}{Ejemplo}
+¿Cuál fue el gasto promedio de los clientes observados?
+\end{exampleblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Estadística inferencial}
+
+La estadística inferencial busca utilizar una muestra para obtener
+conclusiones sobre una población.
+
+\vspace{0.4cm}
+
+Herramientas:
+
+\begin{itemize}
+
+    \item estimación;
+
+    \item distribuciones muestrales;
+
+    \item error estándar;
+
+    \item intervalos de confianza;
+
+    \item pruebas de hipótesis;
+
+    \item significancia estadística.
+
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{exampleblock}{Ejemplo}
+¿Podemos inferir el gasto promedio de todos los clientes utilizando una muestra?
+\end{exampleblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Descriptiva vs inferencial}
+
+\begin{columns}
+
+\column{0.45\textwidth}
+
+\begin{block}{Descriptiva}
+
+Pregunta:
+
+\begin{center}
+¿Qué ocurrió en los datos observados?
+\end{center}
+
+\end{block}
+
+\column{0.45\textwidth}
+
+\begin{exampleblock}{Inferencial}
+
+Pregunta:
+
+\begin{center}
+¿Qué podemos concluir más allá de los datos observados?
+\end{center}
+
+\end{exampleblock}
+
+\end{columns}
+
+\end{frame}
+
+% ============================================================
+\section{Población y muestra}
+% ============================================================
+
+\begin{frame}{¿Qué es una población?}
+
+Una \textbf{población} es el conjunto completo de elementos que queremos estudiar.
+
+Ejemplos:
+
+\begin{itemize}
+
+    \item todos los clientes de una empresa;
+
+    \item todos los estudiantes de una universidad;
+
+    \item todas las transacciones de un año;
+
+    \item todas las piezas producidas por una fábrica;
+
+    \item todos los usuarios de una aplicación.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Qué es una muestra?}
+
+Una \textbf{muestra} es un subconjunto de la población.
+
+\vspace{0.3cm}
+
+\begin{center}
+
+\begin{tikzpicture}
+
+\draw[
+    fill=azulclaro,
+    draw=azulmarista,
+    thick
+]
+(0,0) circle (2);
+
+\node at (0,1.35) {
+    \textbf{Población}
+};
+
+\draw[
+    fill=verdeclaro,
+    draw=verde,
+    thick
+]
+(0,-0.4) circle (0.9);
+
+\node at (0,-0.4) {
+    \textbf{Muestra}
+};
+
+\end{tikzpicture}
+
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Por qué trabajar con muestras?}
+
+Porque estudiar toda la población puede ser:
+
+\begin{itemize}
+
+    \item muy costoso;
+
+    \item muy lento;
+
+    \item computacionalmente complejo;
+
+    \item imposible;
+
+    \item innecesario cuando una muestra adecuada puede proporcionar una buena estimación.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Parámetro vs estadístico}
+
+\begin{columns}
+
+\column{0.45\textwidth}
+
+\begin{block}{Parámetro}
+
+Describe a la población.
+
+Ejemplo:
+
+\[
+\mu
+\]
+
+Media poblacional.
+
+\end{block}
+
+\column{0.45\textwidth}
+
+\begin{exampleblock}{Estadístico}
+
+Se calcula con una muestra.
+
+Ejemplo:
+
+\[
+\bar{x}
+\]
+
+Media muestral.
+
+\end{exampleblock}
+
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{center}
+
+Muestra
+
+$\downarrow$
+
+Estadístico
+
+$\downarrow$
+
+Estimación del parámetro
+
+\end{center}
+
+\end{frame}
+
+% ============================================================
+\section{Sesgo de muestreo}
+% ============================================================
+
+\begin{frame}{Una muestra puede estar sesgada}
+
+Supongamos:
+
+\begin{quote}
+
+Queremos medir la satisfacción de todos los estudiantes,
+pero solamente encuestamos a quienes asistieron hoy.
+
+\end{quote}
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Pregunta}
+¿La muestra representa necesariamente a toda la población?
+\end{alertblock}
+
+No.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ejemplo de sesgo}
+
+Queremos conocer el uso de redes sociales de una población.
+
+Pero publicamos la encuesta solamente en Instagram.
+
+\vspace{0.4cm}
+
+La muestra podría sobre-representar:
+
+\begin{itemize}
+
+    \item usuarios activos de Instagram;
+
+    \item personas con determinadas edades;
+
+    \item ciertos hábitos digitales.
+
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{block}{Idea}
+El proceso de selección de la muestra importa.
+\end{block}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Más datos no corrigen todo}
+
+Podemos tener:
+
+\begin{center}
+
+{\Huge
+1\,000\,000
+}
+
+\vspace{0.3cm}
+
+observaciones.
+
+\end{center}
+
+Pero si la muestra está sistemáticamente sesgada:
+
+\begin{center}
+
+\Large
+más datos $\neq$ mejor inferencia
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Lección}
+Una muestra enorme puede seguir representando mal a la población.
+\end{alertblock}
+
+\end{frame}
+
+% ============================================================
+\section{Tendencia central}
+% ============================================================
+
+\begin{frame}[fragile]{Media}
+
+La media aritmética es:
+
+\[
+\bar{x}
+=
+\frac{1}{n}
+\sum_{i=1}^{n}x_i
+\]
+
+En Pandas:
+
+\begin{lstlisting}
+media = df["ingreso"].mean()
+
+print(media)
+\end{lstlisting}
+
+\begin{block}{Interpretación}
+Representa el centro aritmético de las observaciones.
+\end{block}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Mediana}
+
+La mediana es el valor central después de ordenar las observaciones.
+
+\begin{lstlisting}
+mediana = df["ingreso"].median()
+
+print(mediana)
+\end{lstlisting}
+
+Ejemplo:
+
+\begin{center}
+
+10,\ 11,\ 12,\ 13,\ 1000
+
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Media vs mediana}
+
+Para:
+
+\[
+10,\ 11,\ 12,\ 13,\ 1000
+\]
+
+tenemos:
+
+\begin{columns}
+
+\column{0.45\textwidth}
+
+\begin{block}{Media}
+
+\[
+209.2
+\]
+
+\end{block}
+
+\column{0.45\textwidth}
+
+\begin{exampleblock}{Mediana}
+
+\[
+12
+\]
+
+\end{exampleblock}
+
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Pregunta}
+¿Cuál representa mejor el valor típico de este grupo?
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Moda}
+
+La moda representa el valor más frecuente.
+
+\begin{lstlisting}
+moda = df["categoria"].mode()
+
+print(moda)
+\end{lstlisting}
+
+Es muy útil para variables categóricas.
+
+Ejemplos:
+
+\begin{itemize}
+
+    \item categoría más frecuente;
+
+    \item ciudad más común;
+
+    \item producto más observado;
+
+    \item tipo de membresía dominante.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+\section{Dispersión}
+% ============================================================
+
+\begin{frame}{El promedio no cuenta toda la historia}
+
+Consideremos:
+
+\vspace{0.2cm}
+
+\begin{columns}
+
+\column{0.45\textwidth}
+
+\begin{block}{Grupo A}
+
+\[
+48,\ 49,\ 50,\ 51,\ 52
+\]
+
+\end{block}
+
+\column{0.45\textwidth}
+
+\begin{exampleblock}{Grupo B}
+
+\[
+10,\ 30,\ 50,\ 70,\ 90
+\]
+
+\end{exampleblock}
+
+\end{columns}
+
+\vspace{0.5cm}
+
+Ambos tienen media:
+
+\[
+50
+\]
+
+pero presentan comportamientos muy diferentes.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Rango}
+
+El rango mide la distancia entre el máximo y el mínimo:
+
+\[
+R
+=
+x_{\max}
+-
+x_{\min}
+\]
+
+En Pandas:
+
+\begin{lstlisting}
+rango = (
+    df["ventas"].max()
+    - df["ventas"].min()
+)
+
+print(rango)
+\end{lstlisting}
+
+\begin{alertblock}{Limitación}
+El rango depende solamente del mínimo y máximo.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Varianza}
+
+La varianza muestral puede expresarse como:
+
+\[
+s^2
+=
+\frac{
+\sum_{i=1}^{n}
+(x_i-\bar{x})^2
+}{
+n-1
+}
+\]
+
+En Pandas:
+
+\begin{lstlisting}
+varianza = df["ventas"].var()
+
+print(varianza)
+\end{lstlisting}
+
+\begin{block}{Interpretación}
+Mide cuánto se alejan, en promedio cuadrático, los datos respecto de la media.
+\end{block}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Desviación estándar}
+
+La desviación estándar es:
+
+\[
+s
+=
+\sqrt{s^2}
+\]
+
+En Pandas:
+
+\begin{lstlisting}
+desviacion = df["ventas"].std()
+
+print(desviacion)
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{block}{Idea}
+Una desviación estándar mayor indica mayor dispersión.
+\end{block}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Misma media, diferente dispersión}
+
+\begin{center}
+
+\begin{tabular}{lcc}
+\toprule
+
+&
+\textbf{Grupo A}
+&
+\textbf{Grupo B} \\
+
+\midrule
+
+Media &
+50 &
+50 \\
+
+Dispersión &
+Baja &
+Alta \\
+
+\bottomrule
+
+\end{tabular}
+
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Lección}
+Una media debería interpretarse junto con una medida de dispersión.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Coeficiente de variación}
+
+Una medida relativa de dispersión es:
+
+\[
+CV
+=
+\frac{s}{\bar{x}}
+\]
+
+Ejemplo:
+
+\begin{center}
+
+\begin{tabular}{lcc}
+\toprule
+
+&
+Producto A &
+Producto B \\
+
+\midrule
+
+Media &
+100 &
+1000 \\
+
+Desv. estándar &
+10 &
+50 \\
+
+\bottomrule
+
+\end{tabular}
+
+\end{center}
+
+\vspace{0.4cm}
+
+El coeficiente permite comparar variabilidad relativa.
+
+\end{frame}
+
+% ============================================================
+\section{Percentiles}
+% ============================================================
+
+\begin{frame}[fragile]{Percentiles}
+
+Los percentiles indican la posición relativa de un valor.
+
+En Pandas:
+
+\begin{lstlisting}
+q1 = df["ventas"].quantile(0.25)
+
+mediana = df["ventas"].quantile(0.50)
+
+q3 = df["ventas"].quantile(0.75)
+
+p95 = df["ventas"].quantile(0.95)
+
+print(q1, mediana, q3, p95)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Interpretación de percentiles}
+
+Supongamos que un cliente está en el:
+
+\[
+P_{95}
+\]
+
+de gasto.
+
+Podemos interpretar que su gasto es superior aproximadamente al
+95\% de las observaciones del dataset.
+
+\vspace{0.4cm}
+
+Aplicaciones:
+
+\begin{itemize}
+
+    \item segmentación de clientes;
+
+    \item detección de valores extremos;
+
+    \item análisis de rendimiento;
+
+    \item riesgo;
+
+    \item calidad.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+\section{Distribuciones}
+% ============================================================
+
+\begin{frame}{¿Qué es una distribución?}
+
+Una distribución describe:
+
+\begin{itemize}
+
+    \item dónde se concentran los datos;
+
+    \item qué tan dispersos están;
+
+    \item qué forma tienen;
+
+    \item si existe asimetría;
+
+    \item si existen colas;
+
+    \item si aparecen valores extremos;
+
+    \item si existen varios grupos.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Visualizar una distribución}
+
+\begin{lstlisting}
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.histplot(
+    data=df,
+    x="ventas",
+    kde=True
+)
+
+plt.title(
+    "Distribucion de ventas"
+)
+
+plt.show()
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Qué buscamos en una distribución?}
+
+\begin{itemize}
+
+    \item simetría;
+
+    \item sesgo positivo;
+
+    \item sesgo negativo;
+
+    \item concentración;
+
+    \item dispersión;
+
+    \item multimodalidad;
+
+    \item valores extremos.
+
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{block}{Pregunta}
+¿Qué información observamos aquí que una media no puede mostrarnos?
+\end{block}
+
+\end{frame}
+
+% ============================================================
+\section{Distribución normal}
+% ============================================================
+
+\begin{frame}{Distribución normal}
+
+La distribución normal es uno de los modelos probabilísticos más importantes.
+
+Características:
+
+\begin{itemize}
+
+    \item simétrica;
+
+    \item forma de campana;
+
+    \item máxima concentración cerca del centro;
+
+    \item menor frecuencia hacia las colas;
+
+    \item media, mediana y moda coinciden en el modelo ideal.
+
+\end{itemize}
+
+\begin{alertblock}{Importante}
+No todos los datos reales siguen una distribución normal.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Regla 68--95--99.7}
+
+Para una variable aproximadamente normal:
+
+\[
+\mu \pm 1\sigma
+\approx
+68\%
+\]
+
+\[
+\mu \pm 2\sigma
+\approx
+95\%
+\]
+
+\[
+\mu \pm 3\sigma
+\approx
+99.7\%
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ejemplo de la regla empírica}
+
+Supongamos:
+
+\[
+\mu = 100
+\]
+
+\[
+\sigma = 10
+\]
+
+Entonces aproximadamente:
+
+\[
+68\%
+\rightarrow
+[90,110]
+\]
+
+\[
+95\%
+\rightarrow
+[80,120]
+\]
+
+\[
+99.7\%
+\rightarrow
+[70,130]
+\]
+
+\end{frame}
+
+% ============================================================
+\section{Z-score}
+% ============================================================
+
+\begin{frame}{Z-score}
+
+El z-score indica cuántas desviaciones estándar separan un valor de la media:
+
+\[
+z
+=
+\frac{x-\mu}{\sigma}
+\]
+
+Ejemplo:
+
+\[
+\mu=100
+\]
+
+\[
+\sigma=10
+\]
+
+\[
+x=130
+\]
+
+Entonces:
+
+\[
+z=3
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Z-score en Python}
+
+\begin{lstlisting}
+from scipy.stats import zscore
+
+df["z_ventas"] = zscore(
+    df["ventas"]
+)
+
+print(
+    df[
+        ["ventas", "z_ventas"]
+    ].head()
+)
+\end{lstlisting}
+
+Aplicaciones:
+
+\begin{itemize}
+
+    \item estandarización;
+
+    \item detección exploratoria de extremos;
+
+    \item comparación entre escalas.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+\section{Distribuciones sesgadas}
+% ============================================================
+
+\begin{frame}{Ejemplo de sesgo positivo}
+
+Consideremos ingresos:
+
+\[
+15000,\ 20000,\ 23000,\ 27000,\ 30000,\ 300000
+\]
+
+La mayoría está relativamente concentrada.
+
+Pero existe un valor muy grande.
+
+\vspace{0.3cm}
+
+Esto genera una cola hacia la derecha.
+
+\vspace{0.3cm}
+
+Frecuentemente:
+
+\[
+\text{media}
+>
+\text{mediana}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Media o mediana?}
+
+\begin{block}{Media}
+Útil cuando queremos representar el centro aritmético y los extremos no dominan excesivamente.
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Mediana}
+Especialmente útil cuando existen valores extremos o distribuciones fuertemente sesgadas.
+\end{exampleblock}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Lección}
+No existe una medida universalmente mejor.
+Depende del problema y de la distribución.
+\end{alertblock}
+
+\end{frame}
+
+% ============================================================
+\section{Muestreo}
+% ============================================================
+
+\begin{frame}{Variabilidad muestral}
+
+Supongamos que tomamos diferentes muestras de la misma población.
+
+\begin{center}
+
+\begin{tabular}{lc}
+\toprule
+
+Muestra &
+Media \\
+
+\midrule
+
+A &
+850 \\
+
+B &
+872 \\
+
+C &
+844 \\
+
+\bottomrule
+
+\end{tabular}
+
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Pregunta}
+¿Por qué cambia la media?
+\end{alertblock}
+
+Porque cada muestra contiene observaciones diferentes.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Tomar una muestra con Pandas}
+
+\begin{lstlisting}
+muestra = df.sample(
+    n=100,
+    random_state=42
+)
+
+media = muestra["ventas"].mean()
+
+print(media)
+\end{lstlisting}
+
+Si cambiamos la muestra, la media puede cambiar.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Cambiar la muestra}
+
+\begin{lstlisting}
+muestra_1 = df.sample(
+    n=100,
+    random_state=42
+)
+
+muestra_2 = df.sample(
+    n=100,
+    random_state=7
+)
+
+print(
+    muestra_1["ventas"].mean()
+)
+
+print(
+    muestra_2["ventas"].mean()
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Tamaño de muestra}
+
+En general, cuando aumenta el tamaño de una muestra aleatoria adecuada:
+
+\begin{itemize}
+
+    \item las estimaciones tienden a ser más estables;
+
+    \item disminuye parte de la incertidumbre muestral;
+
+    \item mejora la precisión estadística.
+
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Pero...}
+Aumentar $n$ no corrige automáticamente sesgos sistemáticos.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Comparar tamaños de muestra}
+
+\begin{lstlisting}
+m10 = (
+    df.sample(10)["ventas"]
+    .mean()
+)
+
+m100 = (
+    df.sample(100)["ventas"]
+    .mean()
+)
+
+m1000 = (
+    df.sample(1000)["ventas"]
+    .mean()
+)
+
+print(m10)
+print(m100)
+print(m1000)
+\end{lstlisting}
+
+\end{frame}
+
+% ============================================================
+\section{Ley de los Grandes Números}
+% ============================================================
+
+\begin{frame}{Ley de los Grandes Números}
+
+De manera conceptual:
+
+\begin{quote}
+
+A medida que aumenta el tamaño de una muestra aleatoria adecuada,
+la media muestral tiende a acercarse a la media poblacional.
+
+\end{quote}
+
+Ejemplo conceptual:
+
+\begin{center}
+
+\begin{tabular}{lr}
+\toprule
+
+Tamaño &
+Media \\
+
+\midrule
+
+10 &
+930 \\
+
+100 &
+861 \\
+
+1000 &
+852 \\
+
+10000 &
+849 \\
+
+\bottomrule
+
+\end{tabular}
+
+\end{center}
+
+\end{frame}
+
+% ============================================================
+\section{Teorema Central del Límite}
+% ============================================================
+
+\begin{frame}{Teorema Central del Límite}
+
+Supongamos que tomamos muchas muestras aleatorias de una población.
+
+Para cada muestra calculamos:
+
+\[
+\bar{x}
+\]
+
+Si repetimos el procedimiento muchas veces, obtenemos una
+\textbf{distribución de medias muestrales}.
+
+\vspace{0.3cm}
+
+\begin{block}{Teorema Central del Límite}
+Bajo condiciones apropiadas, cuando el tamaño de muestra aumenta,
+la distribución de la media muestral tiende aproximadamente a una distribución normal.
+\end{block}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Una idea sorprendente}
+
+La población original:
+
+\begin{center}
+
+\Large
+\textbf{no necesita ser normal}
+
+\end{center}
+
+\vspace{0.5cm}
+
+Sin embargo, bajo condiciones apropiadas y con muestras suficientemente grandes:
+
+\[
+\bar{X}
+\]
+
+puede presentar una distribución aproximadamente normal.
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Importancia}
+Esta propiedad es fundamental para muchos procedimientos de inferencia.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{De población a distribución muestral}
+
+\begin{center}
+
+\begin{tikzpicture}[
+node distance=0.55cm,
+every node/.style={
+    draw,
+    rounded corners,
+    minimum width=3.5cm,
+    minimum height=0.65cm,
+    align=center,
+    font=\small
+}
+]
+
+\node[
+    fill=naranjaclaro
+] (pob) {
+    Población\\
+    posiblemente sesgada
+};
+
+\node[
+    below=of pob,
+    fill=azulclaro
+] (muestras) {
+    Muchas muestras\\
+    de tamaño $n$
+};
+
+\node[
+    below=of muestras,
+    fill=verdeclaro
+] (medias) {
+    Calculamos\\
+    $\bar{x}_1,\bar{x}_2,\ldots,\bar{x}_k$
+};
+
+\node[
+    below=of medias,
+    fill=moradoclaro
+] (dist) {
+    Distribución de\\
+    medias muestrales
+};
+
+\draw[-{Latex}] (pob) -- (muestras);
+
+\draw[-{Latex}] (muestras) -- (medias);
+
+\draw[-{Latex}] (medias) -- (dist);
+
+\end{tikzpicture}
+
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Simulando el Teorema Central del Límite}
+
+\begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+poblacion = np.random.exponential(
+    scale=10,
+    size=100000
+)
+
+medias = []
+
+for _ in range(5000):
+
+    muestra = np.random.choice(
+        poblacion,
+        size=50
+    )
+
+    medias.append(
+        muestra.mean()
+    )
+
+plt.hist(
+    medias,
+    bins=40
+)
+
+plt.title(
+    "Distribucion de medias muestrales"
+)
+
+plt.xlabel("Media")
+plt.ylabel("Frecuencia")
+
+plt.show()
+\end{lstlisting}
+
+\end{frame}
+
+% ============================================================
+\section{Error estándar}
+% ============================================================
+
+\begin{frame}{Error estándar}
+
+La desviación estándar describe la dispersión de las observaciones.
+
+El \textbf{error estándar} describe la variabilidad esperada de una estimación.
+
+Para la media:
+
+\[
+SE
+=
+\frac{s}{\sqrt{n}}
+\]
+
+donde:
+
+\begin{itemize}
+
+    \item $s$ = desviación estándar muestral;
+
+    \item $n$ = tamaño de muestra.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Qué ocurre cuando aumenta $n$?}
+
+Tenemos:
+
+\[
+SE
+=
+\frac{s}{\sqrt{n}}
+\]
+
+Si aumenta:
+
+\[
+n
+\]
+
+entonces:
+
+\[
+SE
+\downarrow
+\]
+
+\vspace{0.4cm}
+
+\begin{block}{Interpretación}
+En general, una muestra mayor permite estimar la media con mayor precisión,
+si el diseño de muestreo es adecuado.
+\end{block}
+
+\end{frame}
+
+% ============================================================
+% DESCANSO
+% ============================================================
+
+\begin{frame}
+
+\begin{center}
+
+{\Huge
+\textcolor{azulmarista}{
+\textbf{DESCANSO}
+}
+}
+
+\vspace{0.5cm}
+
+{\Large
+10 minutos
+}
+
+\vspace{1cm}
+
+Al regresar:
+
+\vspace{0.3cm}
+
+{\Large
+¿Cómo cuantificamos la incertidumbre de una estimación?
+}
+
+\end{center}
+
+\end{frame}
+
+% ============================================================
+\section{Intervalos de confianza}
+% ============================================================
+
+\begin{frame}{Una estimación puntual}
+
+Supongamos que nuestra muestra produce:
+
+\[
+\bar{x}=850
+\]
+
+Podemos decir:
+
+\begin{center}
+
+\Large
+``La media estimada es 850''
+
+\end{center}
+
+\vspace{0.4cm}
+
+Pero otra muestra podría producir:
+
+\[
+842
+\]
+
+o:
+
+\[
+861
+\]
+
+Por eso necesitamos expresar incertidumbre.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Intervalo de confianza}
+
+Un intervalo de confianza proporciona un rango de valores plausibles
+para un parámetro bajo un procedimiento estadístico determinado.
+
+\vspace{0.5cm}
+
+De forma aproximada, para ciertos casos:
+
+\[
+\bar{x}
+\pm
+1.96(SE)
+\]
+
+para un nivel del 95\%.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ejemplo}
+
+Supongamos:
+
+\[
+\bar{x}
+=
+850
+\]
+
+y:
+
+\[
+SE
+=
+20
+\]
+
+Entonces:
+
+\[
+850
+\pm
+1.96(20)
+\]
+
+\[
+850
+\pm
+39.2
+\]
+
+Por lo tanto:
+
+\[
+[810.8,\ 889.2]
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Interpretación frecuentista}
+
+Una interpretación adecuada es:
+
+\begin{quote}
+
+Si repitiéramos el procedimiento muchas veces,
+aproximadamente el 95\% de los intervalos construidos de esta forma
+contendrían el parámetro verdadero,
+bajo los supuestos del método.
+
+\end{quote}
+
+\vspace{0.4cm}
+
+\begin{block}{Idea práctica}
+El intervalo comunica precisión e incertidumbre.
+\end{block}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Intervalo de confianza con SciPy}
+
+\begin{lstlisting}
+import scipy.stats as stats
+
+datos = df["ventas"].dropna()
+
+media = datos.mean()
+
+sem = stats.sem(datos)
+
+ic = stats.t.interval(
+    confidence=0.95,
+    df=len(datos)-1,
+    loc=media,
+    scale=sem
+)
+
+print("Media:", media)
+
+print("IC 95%:", ic)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Intervalo ancho vs estrecho}
+
+Un intervalo más estrecho suele indicar:
+
+\begin{center}
+
+\Large
+mayor precisión
+
+\end{center}
+
+Puede depender de:
+
+\begin{itemize}
+
+    \item tamaño de muestra;
+
+    \item variabilidad;
+
+    \item nivel de confianza;
+
+    \item modelo estadístico.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Precisión no significa ausencia de sesgo}
+
+Podemos tener:
+
+\begin{center}
+
+\Large
+un intervalo muy estrecho
+\end{center}
+
+pero construido sobre una muestra sesgada.
+
+\vspace{0.5cm}
+
+Entonces tendremos una estimación:
+
+\begin{center}
+
+\Large
+\textbf{precisa pero equivocada}
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Lección}
+Precisión y exactitud no son exactamente lo mismo.
+\end{alertblock}
+
+\end{frame}
+
+% ============================================================
+\section{Hipótesis estadísticas}
+% ============================================================
+
+\begin{frame}{Una nueva pregunta}
+
+Una empresa modifica su estrategia comercial.
+
+Antes:
+
+\[
+\bar{x}_A
+=
+820
+\]
+
+Después:
+
+\[
+\bar{x}_B
+=
+860
+\]
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Pregunta}
+¿La diferencia refleja un cambio real o podría aparecer por variabilidad muestral?
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Hipótesis nula}
+
+La hipótesis nula se representa como:
+
+\[
+H_0
+\]
+
+Usualmente representa:
+
+\begin{center}
+
+\Large
+ausencia de efecto o diferencia
+
+\end{center}
+
+Por ejemplo:
+
+\[
+H_0:
+\mu_A
+=
+\mu_B
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Hipótesis alternativa}
+
+La hipótesis alternativa se representa:
+
+\[
+H_1
+\]
+
+Ejemplo bilateral:
+
+\[
+H_1:
+\mu_A
+\neq
+\mu_B
+\]
+
+Ejemplo direccional:
+
+\[
+H_1:
+\mu_B
+>
+\mu_A
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{La lógica de una prueba estadística}
+
+\begin{center}
+
+\begin{tikzpicture}[
+node distance=0.55cm,
+every node/.style={
+draw,
+rounded corners,
+fill=azulclaro,
+minimum width=4.2cm,
+minimum height=0.7cm,
+font=\small,
+align=center
+}
+]
+
+\node (h0) {
+Suponemos que $H_0$ es cierta
+};
+
+\node[below=of h0] (datos) {
+Observamos nuestros datos
+};
+
+\node[below=of datos] (extremo) {
+Medimos qué tan extremo es el resultado
+};
+
+\node[below=of extremo] (decision) {
+Evaluamos la evidencia
+};
+
+\draw[-{Latex}] (h0) -- (datos);
+
+\draw[-{Latex}] (datos) -- (extremo);
+
+\draw[-{Latex}] (extremo) -- (decision);
+
+\end{tikzpicture}
+
+\end{center}
+
+\end{frame}
+
+% ============================================================
+\section{Valor p}
+% ============================================================
+
+\begin{frame}{¿Qué es el valor p?}
+
+El valor $p$ es:
+
+\begin{quote}
+
+La probabilidad, suponiendo que la hipótesis nula y el modelo del test
+son correctos, de obtener un resultado al menos tan extremo como el observado.
+
+\end{quote}
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Muy importante}
+El valor $p$ NO es la probabilidad de que $H_0$ sea verdadera.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Nivel de significancia}
+
+Un valor utilizado frecuentemente es:
+
+\[
+\alpha
+=
+0.05
+\]
+
+Si:
+
+\[
+p < \alpha
+\]
+
+rechazamos $H_0$ bajo ese criterio.
+
+Si:
+
+\[
+p \geq \alpha
+\]
+
+no encontramos evidencia suficiente para rechazar $H_0$.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{No rechazar no significa demostrar}
+
+Si obtenemos:
+
+\[
+p = 0.30
+\]
+
+no debemos decir:
+
+\begin{center}
+
+``Demostramos que ambos grupos son iguales.''
+\end{center}
+
+\vspace{0.4cm}
+
+La interpretación correcta es:
+
+\begin{center}
+
+``No encontramos evidencia suficiente para rechazar la hipótesis nula.''
+\end{center}
+
+\end{frame}
+
+% ============================================================
+\section{Errores estadísticos}
+% ============================================================
+
+\begin{frame}{Error tipo I}
+
+Ocurre cuando:
+
+\begin{center}
+
+rechazamos $H_0$
+
+\end{center}
+
+cuando en realidad:
+
+\begin{center}
+
+$H_0$ era cierta.
+
+\end{center}
+
+\vspace{0.4cm}
+
+Puede interpretarse como:
+
+\begin{center}
+
+\Large
+\textbf{falsa alarma}
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Error tipo II}
+
+Ocurre cuando:
+
+\begin{center}
+
+no rechazamos $H_0$
+
+\end{center}
+
+cuando realmente:
+
+\begin{center}
+
+existe un efecto.
+
+\end{center}
+
+\vspace{0.4cm}
+
+Puede interpretarse como:
+
+\begin{center}
+
+\Large
+\textbf{no detectar una señal real}
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ejemplo empresarial}
+
+\begin{columns}
+
+\column{0.45\textwidth}
+
+\begin{alertblock}{Tipo I}
+
+Concluimos que una campaña funciona.
+
+Pero realmente no produce mejora.
+
+\end{alertblock}
+
+\column{0.45\textwidth}
+
+\begin{exampleblock}{Tipo II}
+
+Concluimos que no existe mejora.
+
+Pero realmente la campaña sí funciona.
+
+\end{exampleblock}
+
+\end{columns}
+
+\end{frame}
+
+% ============================================================
+\section{Significancia práctica}
+% ============================================================
+
+\begin{frame}{Significancia estadística}
+
+Supongamos:
+
+\begin{center}
+
+\begin{tabular}{lc}
+\toprule
+
+Grupo &
+Promedio \\
+
+\midrule
+
+A &
+\$100.00 \\
+
+B &
+\$100.03 \\
+
+\bottomrule
+
+\end{tabular}
+
+\end{center}
+
+Con millones de observaciones podríamos encontrar:
+
+\[
+p < 0.001
+\]
+
+\begin{alertblock}{Pregunta}
+¿Una diferencia de tres centavos importa?
+\end{alertblock}
+
+No necesariamente.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Dos preguntas diferentes}
+
+\begin{columns}
+
+\column{0.45\textwidth}
+
+\begin{block}{Valor p}
+
+Pregunta:
+
+\begin{center}
+
+¿Existe evidencia de una diferencia?
+
+\end{center}
+
+\end{block}
+
+\column{0.45\textwidth}
+
+\begin{exampleblock}{Tamaño del efecto}
+
+Pregunta:
+
+\begin{center}
+
+¿Qué tan grande es la diferencia?
+
+\end{center}
+
+\end{exampleblock}
+
+\end{columns}
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Lección}
+Significancia estadística no implica automáticamente relevancia práctica.
+\end{alertblock}
+
+\end{frame}
+
+% ============================================================
+\section{Live Coding}
+% ============================================================
+
+\begin{frame}{Caso práctico: Experimento A/B}
+
+Tenemos dos grupos:
+
+\begin{itemize}
+
+    \item Grupo A: experiencia actual;
+
+    \item Grupo B: nueva experiencia.
+
+\end{itemize}
+
+Queremos determinar:
+
+\begin{center}
+
+\Large
+¿El gasto promedio cambió?
+
+\end{center}
+
+Dataset:
+
+\begin{center}
+
+\texttt{experimento\_marketing.csv}
+
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 1: cargar el dataset}
+
+\begin{lstlisting}
+import pandas as pd
+
+df = pd.read_csv(
+    "experimento_marketing.csv"
+)
+
+print(df.head())
+
+print(df.shape)
+
+df.info()
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 2: descriptiva por grupo}
+
+\begin{lstlisting}
+resumen = (
+    df.groupby("grupo")["gasto"]
+      .agg([
+          "count",
+          "mean",
+          "median",
+          "std"
+      ])
+)
+
+print(resumen)
+\end{lstlisting}
+
+\begin{block}{Regla}
+Antes de aplicar una prueba estadística debemos conocer los datos.
+\end{block}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 3: visualizar}
+
+\begin{lstlisting}
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.boxplot(
+    data=df,
+    x="grupo",
+    y="gasto"
+)
+
+plt.title(
+    "Distribucion del gasto por grupo"
+)
+
+plt.show()
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Pregunta antes de probar}
+
+Después de observar la gráfica:
+
+\begin{center}
+
+\Large
+¿Parece existir una diferencia?
+\end{center}
+
+\vspace{0.5cm}
+
+Pero recuerda:
+
+\begin{alertblock}{Regla}
+Una diferencia visual no demuestra por sí sola una diferencia estadística.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 4: separar grupos}
+
+\begin{lstlisting}
+grupo_a = df.loc[
+    df["grupo"] == "A",
+    "gasto"
+].dropna()
+
+grupo_b = df.loc[
+    df["grupo"] == "B",
+    "gasto"
+].dropna()
+
+print(
+    grupo_a.mean()
+)
+
+print(
+    grupo_b.mean()
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Formular hipótesis}
+
+Hipótesis nula:
+
+\[
+H_0:
+\mu_A
+=
+\mu_B
+\]
+
+Hipótesis alternativa:
+
+\[
+H_1:
+\mu_A
+\neq
+\mu_B
+\]
+
+\vspace{0.5cm}
+
+\begin{block}{Pregunta}
+¿Existe evidencia de que el gasto promedio de ambos grupos sea diferente?
+\end{block}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 5: Welch t-test}
+
+\begin{lstlisting}
+from scipy.stats import ttest_ind
+
+t_stat, p_value = ttest_ind(
+    grupo_a,
+    grupo_b,
+    equal_var=False
+)
+
+print(
+    "t-statistic:",
+    t_stat
+)
+
+print(
+    "p-value:",
+    p_value
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Por qué Welch?}
+
+La prueba t de Welch permite comparar las medias de dos grupos independientes.
+
+Una ventaja es que:
+
+\begin{center}
+
+no exige asumir exactamente la misma varianza en ambos grupos.
+
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Importante}
+Toda prueba estadística tiene supuestos que debemos considerar.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 6: decisión estadística}
+
+\begin{lstlisting}
+alpha = 0.05
+
+if p_value < alpha:
+
+    print(
+        "Hay evidencia de una diferencia."
+    )
+
+else:
+
+    print(
+        "No hay evidencia suficiente."
+    )
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Pero todavía falta algo}
+
+Supongamos:
+
+\[
+p = 0.01
+\]
+
+Entonces encontramos evidencia estadística.
+
+Pero todavía debemos preguntar:
+
+\begin{center}
+
+\Huge
+¿Cuánto cambió?
+\end{center}
+
+\vspace{0.4cm}
+
+Ese es el puente hacia la magnitud del efecto.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 7: diferencia observada}
+
+\begin{lstlisting}
+media_a = grupo_a.mean()
+
+media_b = grupo_b.mean()
+
+diferencia = (
+    media_b
+    - media_a
+)
+
+print(
+    "Media A:",
+    media_a
+)
+
+print(
+    "Media B:",
+    media_b
+)
+
+print(
+    "Diferencia:",
+    diferencia
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ============================================================
+\section{Tamaño del efecto}
+% ============================================================
+
+\begin{frame}{Tamaño del efecto}
+
+Una medida clásica es Cohen's $d$:
+
+\[
+d
+=
+\frac{
+\bar{x}_1
+-
+\bar{x}_2
+}{
+s_{\text{pooled}}
+}
+\]
+
+\vspace{0.5cm}
+
+Conceptualmente:
+
+\begin{center}
+
+\textbf{Valor p}
+
+$\downarrow$
+
+¿Existe evidencia?
+
+\vspace{0.5cm}
+
+\textbf{Effect Size}
+
+$\downarrow$
+
+¿Qué tan grande es el efecto?
+
+\end{center}
+
+\end{frame}
+
+% ============================================================
+\section{Correlación}
+% ============================================================
+
+\begin{frame}[fragile]{Correlación}
+
+Podemos estudiar asociaciones entre variables numéricas:
+
+\begin{lstlisting}
+correlacion = df[
+    [
+        "publicidad",
+        "ventas"
+    ]
+].corr()
+
+print(correlacion)
+\end{lstlisting}
+
+Podríamos obtener:
+
+\[
+r
+=
+0.82
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Interpretación de correlación}
+
+Un valor cercano a:
+
+\[
++1
+\]
+
+indica una asociación lineal positiva fuerte.
+
+Un valor cercano a:
+
+\[
+-1
+\]
+
+indica una asociación lineal negativa fuerte.
+
+Un valor cercano a:
+
+\[
+0
+\]
+
+indica poca asociación lineal.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Correlación no implica causalidad}
+
+Encontrar:
+
+\[
+X
+\leftrightarrow
+Y
+\]
+
+no demuestra:
+
+\[
+X
+\rightarrow
+Y
+\]
+
+Podrían existir:
+
+\begin{itemize}
+
+    \item variables confusoras;
+
+    \item causalidad inversa;
+
+    \item selección;
+
+    \item coincidencias;
+
+    \item relaciones indirectas.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ejemplo clásico}
+
+Podemos observar:
+
+\begin{center}
+
+Ventas de helado
+
+$\uparrow$
+
+\vspace{0.3cm}
+
+Casos de insolación
+
+$\uparrow$
+
+\end{center}
+
+¿El helado causa insolación?
+
+\vspace{0.5cm}
+
+No necesariamente.
+
+Una tercera variable podría explicar ambas:
+
+\begin{center}
+
+\Large
+Temperatura
+\end{center}
+
+\end{frame}
+
+% ============================================================
+\section{Statistical Detective Challenge}
+% ============================================================
+
+\begin{frame}{Misión}
+
+\begin{center}
+
+{\Huge
+\textcolor{azulmarista}{
+\textbf{Statistical Detective}
+}
+}
+
+\vspace{0.7cm}
+
+Marketing afirma:
+
+\vspace{0.3cm}
+
+{\Large
+\textbf{``La campaña B es mejor que la campaña A.''}
+}
+
+\vspace{0.8cm}
+
+Su misión:
+
+\vspace{0.2cm}
+
+\textbf{determinar si los datos respaldan esa afirmación.}
+
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Dataset del reto}
+
+Archivo:
+
+\begin{center}
+
+\texttt{campania\_ab.csv}
+
+\end{center}
+
+Variables:
+
+\begin{itemize}
+
+    \item \texttt{id\_usuario};
+
+    \item \texttt{grupo};
+
+    \item \texttt{edad};
+
+    \item \texttt{region};
+
+    \item \texttt{conversion};
+
+    \item \texttt{gasto};
+
+    \item \texttt{tiempo\_sitio}.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Paso 1: explorar}
+
+Cada equipo debe determinar:
+
+\begin{itemize}
+
+    \item tamaño de los grupos;
+
+    \item media;
+
+    \item mediana;
+
+    \item desviación estándar;
+
+    \item valores faltantes;
+
+    \item posibles outliers.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Código de apoyo}
+
+\begin{lstlisting}
+resumen = (
+    df.groupby("grupo")["gasto"]
+      .agg([
+          "count",
+          "mean",
+          "median",
+          "std"
+      ])
+)
+
+print(resumen)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Paso 2: visualizar}
+
+Cada equipo debe crear al menos una gráfica.
+
+Opciones:
+
+\begin{itemize}
+
+    \item boxplot;
+
+    \item histograma;
+
+    \item gráfica de comparación de medias.
+
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{block}{Regla}
+La visualización debe ayudar a responder la pregunta.
+\end{block}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Paso 3: formular hipótesis}
+
+Para comparar gasto promedio:
+
+\[
+H_0:
+\mu_A
+=
+\mu_B
+\]
+
+\[
+H_1:
+\mu_A
+\neq
+\mu_B
+\]
+
+\vspace{0.5cm}
+
+Deben explicar estas hipótesis usando lenguaje de negocio.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Paso 4: realizar la prueba}
+
+Para este ejercicio:
+
+\begin{center}
+
+\Large
+Welch t-test
+
+\end{center}
+
+Deben reportar:
+
+\begin{itemize}
+
+    \item estadístico t;
+
+    \item valor $p$;
+
+    \item nivel $\alpha$;
+
+    \item decisión estadística.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Paso 5: medir la diferencia}
+
+No basta con decir:
+
+\begin{center}
+
+\texttt{p = 0.03}
+
+\end{center}
+
+También deben calcular:
+
+\[
+\bar{x}_B
+-
+\bar{x}_A
+\]
+
+y responder:
+
+\begin{center}
+
+\Large
+¿La diferencia es relevante?
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Trampas del dataset}
+
+El dataset puede incluir:
+
+\begin{itemize}
+
+    \item tamaños de muestra diferentes;
+
+    \item valores extremos;
+
+    \item distribuciones sesgadas;
+
+    \item varianzas diferentes;
+
+    \item pequeñas diferencias estadísticamente significativas.
+
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Objetivo}
+No ejecutar automáticamente una prueba.
+Primero entender los datos.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Formato de entrega}
+
+Cada equipo deberá presentar:
+
+\begin{enumerate}
+
+    \item pregunta;
+
+    \item hipótesis;
+
+    \item resumen descriptivo;
+
+    \item visualización;
+
+    \item prueba estadística;
+
+    \item valor $p$;
+
+    \item diferencia observada;
+
+    \item interpretación;
+
+    \item recomendación.
+
+\end{enumerate}
+
+\end{frame}
+
+% ============================================================
+\section{Errores comunes}
+% ============================================================
+
+\begin{frame}{Error común 1}
+
+\begin{center}
+
+\Large
+``p = 0.03, entonces existe 97\% de probabilidad de que mi hipótesis sea cierta.''
+
+\end{center}
+
+\vspace{0.6cm}
+
+\begin{alertblock}{Incorrecto}
+El valor $p$ no es la probabilidad de que una hipótesis sea verdadera.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Error común 2}
+
+\begin{center}
+
+\Large
+``p > 0.05, entonces demostramos que los grupos son iguales.''
+
+\end{center}
+
+\vspace{0.6cm}
+
+\begin{alertblock}{Incorrecto}
+No encontrar evidencia suficiente de diferencia no demuestra igualdad.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Error común 3}
+
+\begin{center}
+
+\Large
+``p < 0.05, entonces el resultado es importante.''
+
+\end{center}
+
+\vspace{0.6cm}
+
+\begin{alertblock}{Incorrecto}
+Significancia estadística no implica necesariamente importancia práctica.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Error común 4}
+
+\begin{center}
+
+\Large
+``Tengo muchos datos, entonces mi análisis debe ser correcto.''
+
+\end{center}
+
+\vspace{0.6cm}
+
+\begin{alertblock}{Incorrecto}
+Un dataset enorme puede seguir teniendo sesgos o problemas de diseño.
+\end{alertblock}
+
+\end{frame}
+
+% ============================================================
+\section{Pipeline estadístico}
+% ============================================================
+
+\begin{frame}{Pipeline de análisis estadístico}
+
+\begin{center}
+
+\begin{tikzpicture}[
+node distance=0.40cm,
+every node/.style={
+draw,
+rounded corners,
+fill=azulclaro,
+minimum width=3.3cm,
+minimum height=0.50cm,
+font=\scriptsize
+}
+]
+
+\node (pregunta) {Pregunta};
+
+\node[below=of pregunta] (explorar) {Explorar};
+
+\node[below=of explorar] (describir) {Describir};
+
+\node[below=of describir] (hipotesis) {Formular hipótesis};
+
+\node[below=of hipotesis] (test) {Aplicar prueba};
+
+\node[below=of test] (magnitud) {Medir magnitud};
+
+\node[below=of magnitud] (interpretar) {Interpretar};
+
+\draw[-{Latex}] (pregunta) -- (explorar);
+
+\draw[-{Latex}] (explorar) -- (describir);
+
+\draw[-{Latex}] (describir) -- (hipotesis);
+
+\draw[-{Latex}] (hipotesis) -- (test);
+
+\draw[-{Latex}] (test) -- (magnitud);
+
+\draw[-{Latex}] (magnitud) -- (interpretar);
+
+\end{tikzpicture}
+
+\end{center}
+
+\end{frame}
+
+% ============================================================
+\section{Herramientas}
+% ============================================================
+
+\begin{frame}{Herramientas de Pandas}
+
+\small
+
+\begin{table}
+\centering
+
+\begin{tabular}{ll}
+\toprule
+
+\textbf{Objetivo} &
+\textbf{Función} \\
+
+\midrule
+
+Media &
+\texttt{mean()} \\
+
+Mediana &
+\texttt{median()} \\
+
+Moda &
+\texttt{mode()} \\
+
+Varianza &
+\texttt{var()} \\
+
+Desviación &
+\texttt{std()} \\
+
+Percentiles &
+\texttt{quantile()} \\
+
+Muestreo &
+\texttt{sample()} \\
+
+Agrupar &
+\texttt{groupby()} \\
+
+Resumen múltiple &
+\texttt{agg()} \\
+
+\bottomrule
+
+\end{tabular}
+
+\end{table}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Herramientas de SciPy}
+
+\small
+
+\begin{table}
+\centering
+
+\begin{tabular}{ll}
+\toprule
+
+\textbf{Objetivo} &
+\textbf{Herramienta} \\
+
+\midrule
+
+Error estándar &
+\texttt{stats.sem()} \\
+
+Intervalo de confianza &
+\texttt{stats.t.interval()} \\
+
+Comparación de medias &
+\texttt{ttest\_ind()} \\
+
+Z-score &
+\texttt{zscore()} \\
+
+\bottomrule
+
+\end{tabular}
+
+\end{table}
+
+\end{frame}
+
+% ============================================================
+\section{Ideas clave}
+% ============================================================
+
+\begin{frame}{12 ideas que deben recordar}
+
+\scriptsize
+
+\begin{enumerate}
+
+    \item Una muestra es una ventana hacia una población.
+
+    \item Una muestra grande no elimina automáticamente el sesgo.
+
+    \item La media no siempre representa correctamente los datos.
+
+    \item La dispersión importa tanto como el centro.
+
+    \item Las distribuciones contienen información importante.
+
+    \item Los estadísticos cambian entre muestras.
+
+    \item El Teorema Central del Límite explica el comportamiento de medias muestrales.
+
+    \item El error estándar mide incertidumbre de una estimación.
+
+    \item Los intervalos de confianza comunican precisión.
+
+    \item El valor $p$ no es la probabilidad de que $H_0$ sea verdadera.
+
+    \item Significancia estadística no implica importancia práctica.
+
+    \item Correlación no implica causalidad.
+
+\end{enumerate}
+
+\end{frame}
+
+% ============================================================
+\section{Volvamos al problema}
+% ============================================================
+
+\begin{frame}{Volvamos al inicio}
+
+Al comenzar preguntamos:
+
+\begin{center}
+
+A:
+
+\[
+12.1\%
+\]
+
+B:
+
+\[
+13.0\%
+\]
+
+\vspace{0.4cm}
+
+{\Huge
+¿B es mejor?
+}
+
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ahora nuestra respuesta cambia}
+
+No podemos responder solamente comparando:
+
+\[
+12.1\%
+\]
+
+contra:
+
+\[
+13.0\%
+\]
+
+Necesitamos considerar:
+
+\begin{itemize}
+
+    \item tamaño de muestra;
+
+    \item variabilidad;
+
+    \item incertidumbre;
+
+    \item diseño del experimento;
+
+    \item significancia estadística;
+
+    \item tamaño del efecto;
+
+    \item relevancia para el negocio.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+\section{Puente a Series Temporales}
+% ============================================================
+
+\begin{frame}{¿Qué cambia cuando aparece el tiempo?}
+
+Hasta ahora hemos analizado observaciones sin centrarnos demasiado
+en el momento en que ocurrieron.
+
+Pero consideremos:
+
+\begin{center}
+
+Ventas de enero
+
+$\downarrow$
+
+Ventas de febrero
+
+$\downarrow$
+
+Ventas de marzo
+
+$\downarrow$
+
+Ventas de abril
+
+\end{center}
+
+\vspace{0.4cm}
+
+Aquí:
+
+\begin{center}
+
+\Large
+\textbf{el orden importa}
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Una nueva clase de datos}
+
+Supongamos que tenemos:
+
+\[
+X_1,
+X_2,
+X_3,
+\ldots,
+X_t
+\]
+
+donde cada observación corresponde a un momento diferente.
+
+\vspace{0.4cm}
+
+Aparecen preguntas nuevas:
+
+\begin{itemize}
+
+    \item ¿Los valores actuales dependen del pasado?
+
+    \item ¿Existe una tendencia?
+
+    \item ¿Hay patrones que se repiten?
+
+    \item ¿Existen ciclos?
+
+    \item ¿Existe estacionalidad?
+
+    \item ¿Podemos utilizar el pasado para entender el futuro?
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Próxima clase}
+
+\begin{center}
+
+{\Huge
+\textbf{Clase 7}
+}
+
+\vspace{0.4cm}
+
+{\LARGE
+\textcolor{azulmarista}{
+\textbf{Series Temporales I}
+}
+}
+
+\vspace{0.3cm}
+
+{\Large
+Tendencia, estacionalidad y estructura temporal
+}
+
+\end{center}
+
+\vspace{0.5cm}
+
+Analizaremos:
+
+\begin{itemize}
+
+    \item índice temporal;
+
+    \item resampling;
+
+    \item tendencia;
+
+    \item estacionalidad;
+
+    \item ciclos;
+
+    \item ruido;
+
+    \item medias móviles;
+
+    \item ventanas móviles;
+
+    \item diferenciación;
+
+    \item autocorrelación;
+
+    \item ACF y PACF;
+
+    \item estacionariedad.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+% CIERRE
+% ============================================================
+
+\begin{frame}
+
+\begin{center}
+
+{\Huge
+\textcolor{azulmarista}{
+\textbf{Estadística para Data Science}
+}
+}
+
+\vspace{0.8cm}
+
+{\Large
+Los datos no hablan por sí solos.
+}
+
+\vspace{0.4cm}
+
+{\Large
+La estadística nos ayuda a distinguir
+}
+
+\vspace{0.3cm}
+
+{\LARGE
+\textbf{señal}
+}
+
+\vspace{0.1cm}
+
+de
+
+\vspace{0.1cm}
+
+{\LARGE
+\textbf{ruido}.
+}
+
+\vspace{0.8cm}
+
+\textbf{Diplomado de Python y Análisis de Datos}
+
+\vspace{0.2cm}
+
+\textbf{Universidad Marista}
+
+\end{center}
+
+\end{frame}
+
+% ============================================================
+
+\end{document}
