@@ -1,0 +1,3630 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% ============================================================
+% CLASE 10 - FEATURE ENGINEERING
+% Diplomado de Python y Análisis de Datos
+% Universidad Marista
+%
+% Compatible con Overleaf + pdfLaTeX
+% ============================================================
+
+% ============================================================
+% CODIFICACIÓN
+% ============================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{lmodern}
+
+% ============================================================
+% PAQUETES
+% ============================================================
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{listings}
+
+\usetikzlibrary{
+    positioning,
+    arrows.meta,
+    shapes.geometric,
+    calc
+}
+
+% ============================================================
+% TEMA
+% ============================================================
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\setbeamertemplate{navigation symbols}{}
+
+% ============================================================
+% COLORES
+% ============================================================
+
+\definecolor{azulmarista}{RGB}{18,67,115}
+\definecolor{azulclaro}{RGB}{224,238,250}
+
+\definecolor{verde}{RGB}{38,120,85}
+\definecolor{verdeclaro}{RGB}{225,245,235}
+
+\definecolor{naranja}{RGB}{225,125,35}
+\definecolor{naranjaclaro}{RGB}{253,237,218}
+
+\definecolor{morado}{RGB}{104,72,150}
+\definecolor{moradoclaro}{RGB}{238,230,248}
+
+\definecolor{gris}{RGB}{80,80,80}
+\definecolor{grisclaro}{RGB}{245,245,245}
+
+\definecolor{rojo}{RGB}{175,50,50}
+\definecolor{rojoclaro}{RGB}{250,230,230}
+
+% ============================================================
+% COLORES BEAMER
+% ============================================================
+
+\setbeamercolor{structure}{
+    fg=azulmarista
+}
+
+\setbeamercolor{frametitle}{
+    fg=white,
+    bg=azulmarista
+}
+
+\setbeamercolor{title}{
+    fg=azulmarista
+}
+
+\setbeamercolor{subtitle}{
+    fg=gris
+}
+
+\setbeamercolor{block title}{
+    fg=white,
+    bg=azulmarista
+}
+
+\setbeamercolor{block body}{
+    bg=azulclaro
+}
+
+\setbeamercolor{block title example}{
+    fg=white,
+    bg=verde
+}
+
+\setbeamercolor{block body example}{
+    bg=verdeclaro
+}
+
+\setbeamercolor{block title alerted}{
+    fg=white,
+    bg=rojo
+}
+
+\setbeamercolor{block body alerted}{
+    bg=rojoclaro
+}
+
+% ============================================================
+% PIE
+% ============================================================
+
+\setbeamertemplate{footline}{
+    \leavevmode
+    \hbox{
+        \begin{beamercolorbox}[
+            wd=.74\paperwidth,
+            ht=2.7ex,
+            dp=1.1ex,
+            leftskip=1em
+        ]{author in head/foot}
+            Diplomado de Python y Análisis de Datos
+        \end{beamercolorbox}
+
+        \begin{beamercolorbox}[
+            wd=.26\paperwidth,
+            ht=2.7ex,
+            dp=1.1ex,
+            center
+        ]{date in head/foot}
+            \insertframenumber/\inserttotalframenumber
+        \end{beamercolorbox}
+    }
+}
+
+% ============================================================
+% CÓDIGO
+% ============================================================
+
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    backgroundcolor=\color{grisclaro},
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{azulmarista}\bfseries,
+    commentstyle=\color{verde},
+    stringstyle=\color{morado},
+    numberstyle=\tiny\color{gris},
+    numbers=left,
+    numbersep=5pt,
+    breaklines=true,
+    breakatwhitespace=false,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{azulmarista}
+}
+
+\lstset{
+    style=pythonstyle
+}
+
+% ============================================================
+% INFORMACIÓN
+% ============================================================
+
+\title{Feature Engineering}
+
+\subtitle{
+Clase 10\\
+Transformar datos en mejores variables
+}
+
+\author{
+Diplomado de Python y Análisis de Datos
+}
+
+\institute{
+Universidad Marista
+}
+
+\date{2026}
+
+% ============================================================
+% DOCUMENTO
+% ============================================================
+
+\begin{document}
+
+% ============================================================
+% PORTADA
+% ============================================================
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% ============================================================
+% OBJETIVOS
+% ============================================================
+
+\begin{frame}{Objetivos de la sesión}
+
+Al finalizar la clase, el estudiante será capaz de:
+
+\begin{itemize}
+
+    \item comprender qué es Feature Engineering;
+
+    \item identificar features útiles, inútiles y peligrosas;
+
+    \item transformar variables numéricas;
+
+    \item escalar variables;
+
+    \item codificar variables categóricas;
+
+    \item utilizar One-Hot Encoding;
+
+    \item crear variables derivadas;
+
+    \item construir ratios e interacciones;
+
+    \item crear variables temporales;
+
+    \item aplicar transformaciones logarítmicas;
+
+    \item evitar Data Leakage durante preprocessing;
+
+    \item utilizar ColumnTransformer;
+
+    \item construir un Pipeline de Scikit-learn;
+
+    \item comparar modelos antes y después del Feature Engineering.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+% CRONOGRAMA
+% ============================================================
+
+\begin{frame}{Ruta de las 4 horas}
+
+\scriptsize
+
+\begin{table}
+\centering
+
+\begin{tabular}{p{2cm}p{9cm}}
+\toprule
+\textbf{Tiempo} & \textbf{Bloque} \\
+\midrule
+
+0:00--0:15 &
+¿Qué es Feature Engineering? \\
+
+0:15--0:35 &
+Selección de variables y variables peligrosas \\
+
+0:35--1:00 &
+Escalamiento: StandardScaler y MinMaxScaler \\
+
+1:00--1:25 &
+Variables categóricas y One-Hot Encoding \\
+
+1:25--1:45 &
+Binning y transformaciones numéricas \\
+
+1:45--1:55 &
+Descanso \\
+
+1:55--2:20 &
+Interacciones, ratios y Polynomial Features \\
+
+2:20--2:40 &
+Variables temporales y de negocio \\
+
+2:40--3:05 &
+Data Leakage en preprocessing \\
+
+3:05--3:25 &
+ColumnTransformer + Pipeline \\
+
+3:25--3:45 &
+Live Coding: antes vs después \\
+
+3:45--3:55 &
+Feature Engineering Challenge \\
+
+3:55--4:00 &
+Conclusiones y puente a Regresión \\
+
+\bottomrule
+\end{tabular}
+
+\end{table}
+
+\end{frame}
+
+% ============================================================
+\section{Introducción}
+% ============================================================
+
+\begin{frame}{Hasta ahora...}
+
+Ya sabemos:
+
+\[
+X
+\rightarrow
+Modelo
+\rightarrow
+\hat y
+\]
+
+Pero hay una pregunta que todavía no hemos estudiado profundamente.
+
+\vspace{0.6cm}
+
+\begin{alertblock}{Pregunta}
+¿De dónde salen las variables que colocamos dentro de $X$?
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Un algoritmo solamente ve números}
+
+Supongamos:
+
+\begin{center}
+
+\begin{tabular}{lll}
+\toprule
+Fecha & Zona & Precio \\
+\midrule
+2026-08-01 & Centro & 2.8M \\
+2026-08-02 & Norte & 2.1M \\
+\bottomrule
+\end{tabular}
+
+\end{center}
+
+\vspace{0.5cm}
+
+Para nosotros:
+
+\begin{center}
+
+``Centro''
+\end{center}
+
+tiene significado.
+
+Para muchos algoritmos:
+
+\begin{center}
+
+\Large
+necesitamos una representación numérica.
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Feature Engineering}
+
+Feature Engineering es el proceso de:
+
+\begin{center}
+
+\Large
+crear, seleccionar o transformar variables
+\end{center}
+
+para representar mejor:
+
+\begin{center}
+
+\Large
+la información relevante del problema.
+\end{center}
+
+\vspace{0.4cm}
+
+Conceptualmente:
+
+\[
+\boxed{
+Datos\ crudos
+\rightarrow
+Features
+\rightarrow
+Modelo
+}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Una buena representación importa}
+
+Supongamos que tenemos:
+
+\[
+metros
+\]
+
+y:
+
+\[
+habitaciones
+\]
+
+Podemos crear:
+
+\[
+\boxed{
+metros\_por\_habitacion
+=
+\frac{
+metros
+}{
+habitaciones
+}
+}
+\]
+
+Esta nueva variable podría capturar:
+
+\begin{center}
+
+\Large
+espacio disponible por habitación.
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Feature Engineering no es inventar datos}
+
+No estamos creando información de la nada.
+
+Estamos:
+
+\begin{itemize}
+
+    \item reorganizando;
+
+    \item transformando;
+
+    \item representando;
+
+    \item combinando;
+
+    \item simplificando
+
+\end{itemize}
+
+información que ya existe.
+
+\end{frame}
+
+% ============================================================
+\section{Selección de variables}
+% ============================================================
+
+\begin{frame}{¿Toda columna debe entrar al modelo?}
+
+No.
+
+Supongamos:
+
+\begin{center}
+
+\begin{tabular}{llll}
+\toprule
+id & nombre & metros & precio \\
+\midrule
+1001 & Ana & 120 & 2.5M \\
+1002 & Pedro & 90 & 1.9M \\
+\bottomrule
+\end{tabular}
+
+\end{center}
+
+\vspace{0.5cm}
+
+¿Debe entrar:
+
+\[
+id
+\]
+
+como feature?
+
+No necesariamente.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Variables identificadoras}
+
+Ejemplos:
+
+\begin{itemize}
+
+    \item ID de cliente;
+
+    \item número de expediente;
+
+    \item UUID;
+
+    \item número de factura;
+
+    \item nombre completo.
+
+\end{itemize}
+
+Normalmente sirven para:
+
+\begin{center}
+
+\Large
+identificar
+\end{center}
+
+no necesariamente para:
+
+\begin{center}
+
+\Large
+predecir.
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Pregunta clave}
+
+Antes de utilizar una columna:
+
+\begin{center}
+
+\Huge
+¿Existe una razón por la cual esta variable
+debería contener información predictiva?
+\end{center}
+
+\vspace{0.5cm}
+
+No todas las columnas son features.
+
+\end{frame}
+
+% ============================================================
+\section{Leakage}
+% ============================================================
+
+\begin{frame}{Variable peligrosa}
+
+Queremos predecir:
+
+\[
+Churn
+\]
+
+y utilizamos:
+
+\[
+fecha\_cancelacion
+\]
+
+como feature.
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Problema}
+La variable prácticamente contiene la respuesta.
+\end{alertblock}
+
+Esto es:
+
+\[
+\boxed{
+Data\ Leakage
+}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Regla de oro}
+
+Para cada feature preguntar:
+
+\begin{center}
+
+\Large
+¿Esta información existiría realmente
+en el momento de hacer la predicción?
+\end{center}
+
+Si:
+
+\[
+No
+\]
+
+debemos investigar posible leakage.
+
+\end{frame}
+
+% ============================================================
+\section{Variables numéricas}
+% ============================================================
+
+\begin{frame}{Escalas diferentes}
+
+Supongamos:
+
+\[
+Edad=35
+\]
+
+pero:
+
+\[
+Ingreso=800\,000
+\]
+
+y:
+
+\[
+Visitas=5
+\]
+
+\vspace{0.5cm}
+
+Las escalas son muy diferentes.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Por qué importa la escala?}
+
+Algunos algoritmos utilizan:
+
+\begin{itemize}
+
+    \item distancia;
+
+    \item gradientes;
+
+    \item regularización.
+
+\end{itemize}
+
+Ejemplos sensibles:
+
+\begin{itemize}
+
+    \item KNN;
+
+    \item K-Means;
+
+    \item SVM;
+
+    \item redes neuronales;
+
+    \item modelos regularizados.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ejemplo de distancia}
+
+Tenemos dos diferencias:
+
+\[
+\Delta Edad=10
+\]
+
+\[
+\Delta Ingreso=300\,000
+\]
+
+En distancia euclidiana:
+
+\[
+d
+=
+\sqrt{
+10^2
++
+300000^2
+}
+\]
+
+\vspace{0.4cm}
+
+¿Qué variable dominará?
+
+\[
+\boxed{Ingreso}
+\]
+
+\end{frame}
+
+% ============================================================
+\section{StandardScaler}
+% ============================================================
+
+\begin{frame}{Estandarización}
+
+StandardScaler transforma aproximadamente:
+
+\[
+z
+=
+\frac{
+x-\mu
+}{
+\sigma
+}
+\]
+
+Después de transformar:
+
+\begin{center}
+
+media cercana a 0
+\end{center}
+
+y:
+
+\begin{center}
+
+desviación estándar cercana a 1.
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ejemplo}
+
+Tenemos:
+
+\[
+x=120
+\]
+
+\[
+\mu=100
+\]
+
+\[
+\sigma=10
+\]
+
+Entonces:
+
+\[
+z
+=
+\frac{
+120-100
+}{
+10
+}
+\]
+
+\[
+\boxed{
+z=2
+}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{StandardScaler}
+
+\begin{lstlisting}
+from sklearn.preprocessing import (
+    StandardScaler
+)
+
+scaler = StandardScaler()
+
+X_train_scaled = scaler.fit_transform(
+    X_train
+)
+
+X_test_scaled = scaler.transform(
+    X_test
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{fit\_transform vs transform}
+
+En Train:
+
+\[
+\boxed{
+fit\_transform()
+}
+\]
+
+porque:
+
+\begin{center}
+
+aprendemos media y desviación
+\end{center}
+
+y transformamos.
+
+En Test:
+
+\[
+\boxed{
+transform()
+}
+\]
+
+porque utilizamos exactamente los parámetros aprendidos en Train.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Nunca hacemos esto}
+
+\begin{center}
+
+\Large
+\texttt{scaler.fit\_transform(X\_test)}
+\end{center}
+
+\vspace{0.5cm}
+
+¿Por qué?
+
+Porque estaríamos permitiendo que Test influya en:
+
+\[
+\mu
+\]
+
+y:
+
+\[
+\sigma
+\]
+
+utilizados en su propia transformación.
+
+\end{frame}
+
+% ============================================================
+\section{MinMaxScaler}
+% ============================================================
+
+\begin{frame}{Normalización Min-Max}
+
+Otra transformación común:
+
+\[
+x'
+=
+\frac{
+x-x_{\min}
+}{
+x_{\max}-x_{\min}
+}
+\]
+
+Normalmente lleva los datos a:
+
+\[
+[0,1]
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ejemplo Min-Max}
+
+Supongamos:
+
+\[
+x_{\min}=0
+\]
+
+\[
+x_{\max}=100
+\]
+
+y:
+
+\[
+x=40
+\]
+
+Entonces:
+
+\[
+x'
+=
+\frac{
+40
+}{
+100
+}
+\]
+
+\[
+\boxed{
+x'=0.4
+}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{MinMaxScaler}
+
+\begin{lstlisting}
+from sklearn.preprocessing import (
+    MinMaxScaler
+)
+
+scaler = MinMaxScaler()
+
+X_train_scaled = scaler.fit_transform(
+    X_train
+)
+
+X_test_scaled = scaler.transform(
+    X_test
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{StandardScaler vs MinMaxScaler}
+
+\begin{center}
+
+\begin{tabular}{lll}
+\toprule
+ & StandardScaler & MinMaxScaler \\
+\midrule
+
+Centro &
+0 &
+No necesariamente \\
+
+Escala &
+Desviación 1 &
+$[0,1]$ \\
+
+Outliers &
+Puede afectarse &
+Muy sensible \\
+
+\bottomrule
+\end{tabular}
+
+\end{center}
+
+\vspace{0.5cm}
+
+No existe un escalador universalmente mejor.
+
+\end{frame}
+
+% ============================================================
+\section{Árboles y escalamiento}
+% ============================================================
+
+\begin{frame}{¿Todos los modelos necesitan escalamiento?}
+
+No.
+
+Modelos basados en árboles como:
+
+\begin{itemize}
+
+    \item Decision Tree;
+
+    \item Random Forest;
+
+    \item Gradient Boosting
+
+\end{itemize}
+
+generalmente son mucho menos sensibles a la escala.
+
+\vspace{0.4cm}
+
+\begin{block}{Idea}
+El preprocessing depende del algoritmo.
+\end{block}
+
+\end{frame}
+
+% ============================================================
+\section{Variables categóricas}
+% ============================================================
+
+\begin{frame}{El problema de las categorías}
+
+Tenemos:
+
+\[
+Zona
+\]
+
+con:
+
+\begin{center}
+
+Centro
+
+Norte
+
+Sur
+\end{center}
+
+Muchos modelos requieren una representación numérica.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Una mala idea}
+
+Podríamos escribir:
+
+\[
+Centro=1
+\]
+
+\[
+Norte=2
+\]
+
+\[
+Sur=3
+\]
+
+Pero esto podría sugerir:
+
+\[
+Sur>Norte>Centro
+\]
+
+aunque no exista ese orden.
+
+\end{frame}
+
+% ============================================================
+\section{One-Hot Encoding}
+% ============================================================
+
+\begin{frame}{One-Hot Encoding}
+
+Transformamos:
+
+\[
+Zona
+\]
+
+en variables binarias:
+
+\begin{center}
+
+\begin{tabular}{ccc}
+\toprule
+Centro & Norte & Sur \\
+\midrule
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+\bottomrule
+\end{tabular}
+
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Con Pandas}
+
+\begin{lstlisting}
+df_encoded = pd.get_dummies(
+    df,
+    columns=[
+        "zona"
+    ],
+    drop_first=True
+)
+
+print(
+    df_encoded.head()
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Con Scikit-learn}
+
+\begin{lstlisting}
+from sklearn.preprocessing import (
+    OneHotEncoder
+)
+
+encoder = OneHotEncoder(
+    handle_unknown="ignore",
+    sparse_output=False
+)
+
+encoder.fit(
+    X_train[["zona"]]
+)
+
+zona_train = encoder.transform(
+    X_train[["zona"]]
+)
+
+zona_test = encoder.transform(
+    X_test[["zona"]]
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{handle\_unknown}
+
+Supongamos que Train tiene:
+
+\begin{center}
+
+Centro, Norte, Sur
+\end{center}
+
+pero Test contiene:
+
+\begin{center}
+
+Poniente
+\end{center}
+
+\vspace{0.4cm}
+
+Con:
+
+\[
+handle\_unknown="ignore"
+\]
+
+evitamos un error directo por esa categoría desconocida.
+
+\end{frame}
+
+% ============================================================
+\section{Ordinal Encoding}
+% ============================================================
+
+\begin{frame}{Categorías con orden}
+
+Algunas categorías sí tienen orden.
+
+Ejemplo:
+
+\begin{center}
+
+Bajo
+
+Medio
+
+Alto
+\end{center}
+
+Aquí tiene sentido una representación como:
+
+\[
+Bajo=0
+\]
+
+\[
+Medio=1
+\]
+
+\[
+Alto=2
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Nominal vs ordinal}
+
+\begin{columns}
+
+\column{0.45\textwidth}
+
+\begin{block}{Nominal}
+
+Sin orden natural.
+
+\begin{itemize}
+
+    \item ciudad;
+
+    \item color;
+
+    \item producto.
+
+\end{itemize}
+
+\end{block}
+
+\column{0.45\textwidth}
+
+\begin{exampleblock}{Ordinal}
+
+Con orden natural.
+
+\begin{itemize}
+
+    \item bajo/medio/alto;
+
+    \item satisfacción;
+
+    \item nivel educativo.
+
+\end{itemize}
+
+\end{exampleblock}
+
+\end{columns}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{OrdinalEncoder}
+
+\begin{lstlisting}
+from sklearn.preprocessing import (
+    OrdinalEncoder
+)
+
+encoder = OrdinalEncoder(
+    categories=[
+        [
+            "Bajo",
+            "Medio",
+            "Alto"
+        ]
+    ]
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Y LabelEncoder?}
+
+\texttt{LabelEncoder} suele utilizarse principalmente para:
+
+\[
+y
+\]
+
+es decir:
+
+\begin{center}
+
+las etiquetas objetivo.
+\end{center}
+
+\vspace{0.4cm}
+
+Para columnas categóricas dentro de $X$ normalmente preferimos:
+
+\begin{itemize}
+
+    \item OneHotEncoder;
+
+    \item OrdinalEncoder.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+\section{Binning}
+% ============================================================
+
+\begin{frame}{Binning}
+
+Binning consiste en convertir una variable continua en intervalos.
+
+Ejemplo:
+
+\[
+Edad
+\]
+
+se convierte en:
+
+\begin{center}
+
+Joven
+
+Adulto
+
+Mayor
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Binning manual}
+
+\begin{lstlisting}
+df["grupo_edad"] = pd.cut(
+    df["edad"],
+    bins=[
+        0,
+        25,
+        40,
+        60,
+        100
+    ],
+    labels=[
+        "18-25",
+        "26-40",
+        "41-60",
+        "60+"
+    ]
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Por qué utilizar binning?}
+
+Puede ayudar a:
+
+\begin{itemize}
+
+    \item simplificar relaciones;
+
+    \item crear segmentos interpretables;
+
+    \item capturar umbrales;
+
+    \item incorporar conocimiento del negocio.
+
+\end{itemize}
+
+Pero:
+
+\begin{alertblock}{Cuidado}
+También perdemos información al convertir números continuos
+en categorías.
+\end{alertblock}
+
+\end{frame}
+
+% ============================================================
+\section{Transformación logarítmica}
+% ============================================================
+
+\begin{frame}{Variables muy sesgadas}
+
+Supongamos ingresos:
+
+\[
+10000,\,
+15000,\,
+20000,\,
+25000,\,
+1000000
+\]
+
+Existe una cola muy larga.
+
+Podemos estudiar:
+
+\[
+\log(1+x)
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Transformación log}
+
+\begin{lstlisting}
+import numpy as np
+
+df["ingreso_log"] = np.log1p(
+    df["ingreso"]
+)
+\end{lstlisting}
+
+\texttt{log1p(x)} calcula:
+
+\[
+\log(1+x)
+\]
+
+y permite manejar:
+
+\[
+x=0
+\]
+
+sin obtener $\log(0)$.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Qué logra el log?}
+
+Puede:
+
+\begin{itemize}
+
+    \item reducir asimetría;
+
+    \item comprimir valores extremos;
+
+    \item facilitar algunas relaciones;
+
+    \item estabilizar escalas.
+
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Cuidado}
+No debemos transformar variables automáticamente sin una razón.
+\end{alertblock}
+
+\end{frame}
+
+% ============================================================
+% DESCANSO
+% ============================================================
+
+\begin{frame}
+
+\begin{center}
+
+{\Huge
+\textcolor{azulmarista}{
+\textbf{DESCANSO}
+}
+}
+
+\vspace{0.6cm}
+
+{\Large
+10 minutos
+}
+
+\vspace{1cm}
+
+{\Large
+Al regresar:
+}
+
+\vspace{0.4cm}
+
+{\LARGE
+¿Cómo crear información nueva a partir
+de las variables existentes?
+}
+
+\end{center}
+
+\end{frame}
+
+% ============================================================
+\section{Interacciones}
+% ============================================================
+
+\begin{frame}{Una variable puede depender de otra}
+
+Supongamos:
+
+\[
+metros
+\]
+
+y:
+
+\[
+zona
+\]
+
+Quizá:
+
+\[
+10\text{ m}^2
+\]
+
+adicionales no valen lo mismo:
+
+\begin{center}
+
+en Centro
+\end{center}
+
+que:
+
+\begin{center}
+
+en una zona periférica.
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Interacción}
+
+Una interacción estudia cómo el efecto de una variable puede depender
+de otra.
+
+Ejemplo:
+
+\[
+x_1x_2
+\]
+
+Podemos crear:
+
+\[
+metros
+\times
+habitaciones
+\]
+
+aunque la interpretación depende del problema.
+
+\end{frame}
+
+% ============================================================
+\section{Ratios}
+% ============================================================
+
+\begin{frame}{Ratios}
+
+Muchas features útiles provienen de razones.
+
+Ejemplos:
+
+\[
+metros\_por\_habitacion
+=
+\frac{
+metros
+}{
+habitaciones
+}
+\]
+
+\[
+gasto\_promedio
+=
+\frac{
+gasto\_total
+}{
+numero\_compras
+}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Crear ratios}
+
+\begin{lstlisting}
+df["metros_por_habitacion"] = (
+    df["metros"]
+    /
+    df["habitaciones"]
+)
+
+df["gasto_promedio"] = (
+    df["gasto_total"]
+    /
+    df["numero_compras"]
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Cuidado con división entre cero}
+
+Si:
+
+\[
+numero\_compras=0
+\]
+
+entonces:
+
+\[
+\frac{
+gasto
+}{
+numero\_compras
+}
+\]
+
+no está definido.
+
+\vspace{0.4cm}
+
+Siempre debemos validar las reglas de negocio.
+
+\end{frame}
+
+% ============================================================
+\section{Polynomial Features}
+% ============================================================
+
+\begin{frame}{Relaciones no lineales}
+
+Supongamos que:
+
+\[
+y
+\]
+
+no cambia linealmente con:
+
+\[
+x
+\]
+
+Podríamos incluir:
+
+\[
+x^2
+\]
+
+o:
+
+\[
+x_1x_2
+\]
+
+como features adicionales.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ejemplo polinomial}
+
+Un modelo:
+
+\[
+y
+=
+\beta_0
++
+\beta_1x
++
+\beta_2x^2
+\]
+
+puede representar curvatura.
+
+\vspace{0.5cm}
+
+Seguimos utilizando un modelo lineal en los parámetros,
+pero con variables transformadas.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{PolynomialFeatures}
+
+\begin{lstlisting}
+from sklearn.preprocessing import (
+    PolynomialFeatures
+)
+
+poly = PolynomialFeatures(
+    degree=2,
+    include_bias=False
+)
+
+X_poly = poly.fit_transform(
+    X[
+        [
+            "metros",
+            "antiguedad"
+        ]
+    ]
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{¿Qué crea degree=2?}
+
+Para:
+
+\[
+x_1,x_2
+\]
+
+puede crear:
+
+\[
+x_1
+\]
+
+\[
+x_2
+\]
+
+\[
+x_1^2
+\]
+
+\[
+x_1x_2
+\]
+
+\[
+x_2^2
+\]
+
+\vspace{0.4cm}
+
+Esto aumenta la capacidad del modelo.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Más features también pueden ser peligrosas}
+
+Si agregamos demasiadas variables:
+
+\[
+p\uparrow
+\]
+
+podemos aumentar:
+
+\begin{itemize}
+
+    \item complejidad;
+
+    \item ruido;
+
+    \item costo;
+
+    \item riesgo de overfitting.
+
+\end{itemize}
+
+\vspace{0.4cm}
+
+\begin{block}{Regla}
+Más features no significa automáticamente mejor modelo.
+\end{block}
+
+\end{frame}
+
+% ============================================================
+\section{Variables temporales}
+% ============================================================
+
+\begin{frame}{Una fecha contiene muchas features}
+
+Tenemos:
+
+\[
+2026-08-21
+\]
+
+Podemos obtener:
+
+\begin{itemize}
+
+    \item año;
+
+    \item mes;
+
+    \item día;
+
+    \item día de semana;
+
+    \item trimestre;
+
+    \item fin de semana.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Features temporales}
+
+\begin{lstlisting}
+df["fecha"] = pd.to_datetime(
+    df["fecha"]
+)
+
+df["anio"] = (
+    df["fecha"].dt.year
+)
+
+df["mes"] = (
+    df["fecha"].dt.month
+)
+
+df["dia_semana"] = (
+    df["fecha"].dt.dayofweek
+)
+
+df["trimestre"] = (
+    df["fecha"].dt.quarter
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Fin de semana}
+
+\begin{lstlisting}
+df["fin_semana"] = (
+    df["fecha"]
+    .dt.dayofweek
+    .isin([
+        5,
+        6
+    ])
+    .astype(int)
+)
+\end{lstlisting}
+
+Ahora:
+
+\[
+1
+\]
+
+significa fin de semana.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Conocimiento del negocio}
+
+Feature Engineering también utiliza conocimiento del dominio.
+
+Ejemplos:
+
+\begin{itemize}
+
+    \item antigüedad del cliente;
+
+    \item días desde última compra;
+
+    \item gasto promedio;
+
+    \item tasa de conversión;
+
+    \item frecuencia de visitas;
+
+    \item ocupación por habitación.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{RFM como ejemplo}
+
+En clientes podemos construir:
+
+\[
+R
+=
+Recency
+\]
+
+\[
+F
+=
+Frequency
+\]
+
+\[
+M
+=
+Monetary
+\]
+
+Estas tres variables resumen:
+
+\begin{itemize}
+
+    \item qué tan reciente compró;
+
+    \item qué tan seguido compra;
+
+    \item cuánto gasta.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+\section{Preprocessing Leakage}
+% ============================================================
+
+\begin{frame}{Leakage también ocurre al transformar}
+
+Supongamos que calculamos:
+
+\[
+\mu
+\]
+
+y:
+
+\[
+\sigma
+\]
+
+utilizando:
+
+\[
+Train+Test
+\]
+
+antes de escalar.
+
+\vspace{0.5cm}
+
+Entonces Test influyó en el preprocessing.
+
+\[
+\boxed{
+Leakage
+}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Orden correcto}
+
+Primero:
+
+\[
+Train/Test
+\]
+
+Después:
+
+\[
+fit\ preprocessing\ en\ Train
+\]
+
+Después:
+
+\[
+transform\ Train
+\]
+
+y:
+
+\[
+transform\ Test
+\]
+
+utilizando solamente lo aprendido en Train.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Flujo incorrecto}
+
+\[
+Datos
+\]
+
+\[
+\downarrow
+\]
+
+\[
+Scaler.fit(Datos)
+\]
+
+\[
+\downarrow
+\]
+
+\[
+Train/Test
+\]
+
+\vspace{0.4cm}
+
+\begin{alertblock}{Problema}
+El scaler ya vio información que terminará en Test.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Flujo correcto}
+
+\[
+Datos
+\]
+
+\[
+\downarrow
+\]
+
+\[
+Train/Test
+\]
+
+\[
+\downarrow
+\]
+
+\[
+Scaler.fit(Train)
+\]
+
+\[
+\downarrow
+\]
+
+\[
+Transform(Train)
+\qquad
+Transform(Test)
+\]
+
+\end{frame}
+
+% ============================================================
+\section{ColumnTransformer}
+% ============================================================
+
+\begin{frame}{Datasets mixtos}
+
+Nuestro dataset puede contener:
+
+\begin{center}
+
+\begin{tabular}{ll}
+\toprule
+Variable & Tipo \\
+\midrule
+metros & numérica \\
+edad & numérica \\
+zona & categórica \\
+tipo & categórica \\
+\bottomrule
+\end{tabular}
+
+\end{center}
+
+Necesitamos diferentes transformaciones.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{La solución}
+
+Podemos decir:
+
+\begin{center}
+
+Variables numéricas
+\end{center}
+
+\[
+\rightarrow
+StandardScaler
+\]
+
+y:
+
+\begin{center}
+
+Variables categóricas
+\end{center}
+
+\[
+\rightarrow
+OneHotEncoder
+\]
+
+utilizando:
+
+\[
+\boxed{
+ColumnTransformer
+}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Definir columnas}
+
+\begin{lstlisting}
+numericas = [
+    "metros",
+    "habitaciones",
+    "banios",
+    "antiguedad"
+]
+
+categoricas = [
+    "zona",
+    "tipo_vivienda"
+]
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{ColumnTransformer}
+
+\begin{lstlisting}
+from sklearn.compose import (
+    ColumnTransformer
+)
+
+from sklearn.preprocessing import (
+    StandardScaler,
+    OneHotEncoder
+)
+
+preprocesador = ColumnTransformer(
+    transformers=[
+        (
+            "num",
+            StandardScaler(),
+            numericas
+        ),
+        (
+            "cat",
+            OneHotEncoder(
+                handle_unknown="ignore"
+            ),
+            categoricas
+        )
+    ]
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ============================================================
+\section{Pipeline}
+% ============================================================
+
+\begin{frame}{Pipeline}
+
+Un Pipeline permite conectar:
+
+\[
+Preprocessing
+\]
+
+con:
+
+\[
+Modelo
+\]
+
+para evitar procesos manuales inconsistentes.
+
+Conceptualmente:
+
+\[
+X
+\rightarrow
+Transformar
+\rightarrow
+Modelo
+\rightarrow
+Predicción
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Pipeline completo}
+
+\begin{lstlisting}
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import (
+    LinearRegression
+)
+
+pipeline = Pipeline(
+    steps=[
+        (
+            "preprocesamiento",
+            preprocesador
+        ),
+        (
+            "modelo",
+            LinearRegression()
+        )
+    ]
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Entrenar Pipeline}
+
+\begin{lstlisting}
+pipeline.fit(
+    X_train,
+    y_train
+)
+
+predicciones = pipeline.predict(
+    X_test
+)
+\end{lstlisting}
+
+\vspace{0.4cm}
+
+El Pipeline se encarga de:
+
+\begin{enumerate}
+
+    \item aprender preprocessing en Train;
+
+    \item transformar;
+
+    \item entrenar el modelo;
+
+    \item transformar correctamente Test;
+
+    \item predecir.
+
+\end{enumerate}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ventaja fundamental}
+
+Con Pipeline reducimos el riesgo de:
+
+\begin{itemize}
+
+    \item olvidar transformaciones;
+
+    \item transformar Train y Test diferente;
+
+    \item introducir leakage accidental;
+
+    \item romper el flujo al llevar el modelo a producción.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+\section{Live Coding}
+% ============================================================
+
+\begin{frame}{Caso práctico}
+
+Utilizaremos:
+
+\begin{center}
+
+\Large
+\texttt{viviendas\_features.csv}
+\end{center}
+
+Variables:
+
+\begin{itemize}
+
+    \item metros;
+
+    \item habitaciones;
+
+    \item baños;
+
+    \item antigüedad;
+
+    \item zona;
+
+    \item tipo\_vivienda;
+
+    \item fecha\_publicacion;
+
+    \item precio.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Objetivo}
+
+Compararemos dos experimentos.
+
+\[
+\boxed{
+Modelo\ A
+}
+\]
+
+con variables básicas.
+
+Contra:
+
+\[
+\boxed{
+Modelo\ B
+}
+\]
+
+con Feature Engineering.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 1: cargar}
+
+\begin{lstlisting}
+import pandas as pd
+
+df = pd.read_csv(
+    "viviendas_features.csv"
+)
+
+print(
+    df.head()
+)
+
+df.info()
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 2: limpiar fecha}
+
+\begin{lstlisting}
+df["fecha_publicacion"] = (
+    pd.to_datetime(
+        df["fecha_publicacion"]
+    )
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 3: variables temporales}
+
+\begin{lstlisting}
+df["mes_publicacion"] = (
+    df["fecha_publicacion"]
+    .dt.month
+)
+
+df["dia_semana"] = (
+    df["fecha_publicacion"]
+    .dt.dayofweek
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 4: nuevas features}
+
+\begin{lstlisting}
+df["metros_por_habitacion"] = (
+    df["metros"]
+    /
+    df["habitaciones"]
+)
+
+df["banios_por_habitacion"] = (
+    df["banios"]
+    /
+    df["habitaciones"]
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Validar antes de dividir}
+
+Antes de crear ratios revisar:
+
+\[
+habitaciones=0?
+\]
+
+También:
+
+\[
+banios<0?
+\]
+
+\[
+metros\leq0?
+\]
+
+\vspace{0.4cm}
+
+Feature Engineering no reemplaza la validación de datos.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 5: X e y}
+
+\begin{lstlisting}
+X = df.drop(
+    columns=[
+        "precio",
+        "fecha_publicacion"
+    ]
+)
+
+y = df[
+    "precio"
+]
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 6: Train/Test}
+
+\begin{lstlisting}
+from sklearn.model_selection import (
+    train_test_split
+)
+
+X_train, X_test, y_train, y_test = (
+    train_test_split(
+        X,
+        y,
+        test_size=0.20,
+        random_state=42
+    )
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 7: columnas}
+
+\begin{lstlisting}
+numericas = [
+    "metros",
+    "habitaciones",
+    "banios",
+    "antiguedad",
+    "mes_publicacion",
+    "dia_semana",
+    "metros_por_habitacion",
+    "banios_por_habitacion"
+]
+
+categoricas = [
+    "zona",
+    "tipo_vivienda"
+]
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 8: preprocessing}
+
+\begin{lstlisting}
+preprocesador = ColumnTransformer(
+    transformers=[
+        (
+            "numericas",
+            StandardScaler(),
+            numericas
+        ),
+        (
+            "categoricas",
+            OneHotEncoder(
+                handle_unknown="ignore"
+            ),
+            categoricas
+        )
+    ]
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 9: pipeline}
+
+\begin{lstlisting}
+pipeline = Pipeline(
+    steps=[
+        (
+            "prep",
+            preprocesador
+        ),
+        (
+            "modelo",
+            LinearRegression()
+        )
+    ]
+)
+
+pipeline.fit(
+    X_train,
+    y_train
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 10: predecir}
+
+\begin{lstlisting}
+pred = pipeline.predict(
+    X_test
+)
+\end{lstlisting}
+
+Ahora:
+
+\[
+\hat y
+\]
+
+fue producido después de aplicar automáticamente todas
+las transformaciones correspondientes.
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Paso 11: evaluar}
+
+\begin{lstlisting}
+from sklearn.metrics import (
+    mean_absolute_error,
+    mean_squared_error,
+    r2_score
+)
+
+mae = mean_absolute_error(
+    y_test,
+    pred
+)
+
+rmse = (
+    mean_squared_error(
+        y_test,
+        pred
+    ) ** 0.5
+)
+
+r2 = r2_score(
+    y_test,
+    pred
+)
+
+print(
+    mae,
+    rmse,
+    r2
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ============================================================
+\section{Antes vs después}
+% ============================================================
+
+\begin{frame}{Experimento}
+
+Modelo inicial:
+
+\[
+X=
+\{
+metros,
+habitaciones,
+banios,
+antiguedad
+\}
+\]
+
+Modelo mejorado:
+
+\[
+X=
+\{
+variables\ originales
++
+categorias
++
+ratios
++
+fecha
+\}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Comparar}
+
+Ejemplo:
+
+\begin{center}
+
+\begin{tabular}{lrr}
+\toprule
+Modelo & MAE & $R^2$ \\
+\midrule
+
+Original & 220000 & 0.72 \\
+
+Feature Engineering & 145000 & 0.86 \\
+
+\bottomrule
+\end{tabular}
+
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{exampleblock}{Pregunta}
+¿Qué variables nuevas pudieron aportar información?
+\end{exampleblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Pero también puede empeorar}
+
+Supongamos:
+
+\[
+MAE_{antes}=150000
+\]
+
+\[
+MAE_{despues}=175000
+\]
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Importante}
+Una feature nueva debe demostrar que aporta valor.
+\end{alertblock}
+
+No debemos conservar variables solamente porque parecen interesantes.
+
+\end{frame}
+
+% ============================================================
+\section{Feature Importance}
+% ============================================================
+
+\begin{frame}{¿Qué variables utiliza más un modelo?}
+
+Algunos modelos ofrecen medidas de:
+
+\[
+\boxed{
+Feature\ Importance
+}
+\]
+
+Por ejemplo:
+
+\begin{itemize}
+
+    \item árboles;
+
+    \item Random Forest;
+
+    \item Gradient Boosting.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}[fragile]{Ejemplo rápido}
+
+\begin{lstlisting}
+from sklearn.ensemble import (
+    RandomForestRegressor
+)
+
+modelo_rf = RandomForestRegressor(
+    n_estimators=100,
+    random_state=42
+)
+
+modelo_rf.fit(
+    X_train_num,
+    y_train
+)
+
+print(
+    modelo_rf.feature_importances_
+)
+\end{lstlisting}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Cuidado con importancia}
+
+Importancia no significa:
+
+\[
+\boxed{
+causalidad
+}
+\]
+
+Además, diferentes métodos de importancia tienen diferentes propiedades.
+
+\vspace{0.4cm}
+
+Más adelante veremos:
+
+\[
+\boxed{
+SHAP
+}
+\]
+
+para explicabilidad.
+
+\end{frame}
+
+% ============================================================
+\section{Feature Engineering Challenge}
+% ============================================================
+
+\begin{frame}{Reto principal}
+
+\begin{center}
+
+{\Huge
+\textcolor{azulmarista}{
+\textbf{Feature Engineering Challenge}
+}
+}
+
+\vspace{0.7cm}
+
+{\Large
+¿Podemos mejorar un modelo
+sin cambiar el algoritmo?
+}
+
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Regla del reto}
+
+Todos utilizarán:
+
+\[
+\boxed{
+LinearRegression
+}
+\]
+
+No pueden cambiar el algoritmo.
+
+Solamente pueden modificar:
+
+\[
+\boxed{
+X
+}
+\]
+
+\vspace{0.4cm}
+
+El objetivo:
+
+\[
+MAE\downarrow
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Dataset}
+
+\begin{center}
+
+\Large
+\texttt{clientes\_features.csv}
+\end{center}
+
+Variables:
+
+\begin{itemize}
+
+    \item edad;
+
+    \item ingreso;
+
+    \item visitas;
+
+    \item compras;
+
+    \item gasto\_total;
+
+    \item ciudad;
+
+    \item fecha\_registro;
+
+    \item gasto\_siguiente\_mes.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Target}
+
+Queremos predecir:
+
+\[
+\boxed{
+gasto\_siguiente\_mes
+}
+\]
+
+Por lo tanto:
+
+\[
+y
+=
+gasto\_siguiente\_mes
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Fase 1}
+
+Construir modelo base usando solamente:
+
+\begin{itemize}
+
+    \item edad;
+
+    \item ingreso;
+
+    \item visitas;
+
+    \item compras;
+
+    \item gasto\_total.
+
+\end{itemize}
+
+Registrar:
+
+\[
+MAE_{base}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Fase 2}
+
+Crear al menos:
+
+\begin{enumerate}
+
+    \item una variable ratio;
+
+    \item una variable temporal;
+
+    \item una transformación;
+
+    \item una variable categórica codificada.
+
+\end{enumerate}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Ideas posibles}
+
+\[
+gasto\_por\_compra
+=
+\frac{
+gasto\_total
+}{
+compras
+}
+\]
+
+\[
+visitas\_por\_compra
+=
+\frac{
+visitas
+}{
+compras
+}
+\]
+
+\[
+antiguedad\_cliente
+\]
+
+\[
+ingreso\_log
+\]
+
+\[
+ciudad\rightarrow OneHot
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Fase 3}
+
+Crear:
+
+\[
+Pipeline
+\]
+
+con:
+
+\begin{itemize}
+
+    \item StandardScaler para numéricas;
+
+    \item OneHotEncoder para categóricas;
+
+    \item LinearRegression.
+
+\end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Fase 4}
+
+Comparar:
+
+\[
+MAE_{base}
+\]
+
+contra:
+
+\[
+MAE_{features}
+\]
+
+Calcular:
+
+\[
+Mejora
+=
+MAE_{base}
+-
+MAE_{features}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Fase 5}
+
+Cada equipo deberá responder:
+
+\begin{enumerate}
+
+    \item ¿Qué feature nueva ayudó más?
+
+    \item ¿Qué feature no ayudó?
+
+    \item ¿Alguna produjo overfitting?
+
+    \item ¿Existe riesgo de leakage?
+
+    \item ¿Qué variables conservarían?
+
+\end{enumerate}
+
+\end{frame}
+
+% ============================================================
+\section{Errores comunes}
+% ============================================================
+
+\begin{frame}{Error 1}
+
+\begin{center}
+
+\Large
+``Voy a escalar todo el dataset
+antes del Train/Test.''
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Incorrecto}
+Puede introducir Data Leakage.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Error 2}
+
+\begin{center}
+
+\Large
+``Centro=1, Norte=2, Sur=3.''
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Problema}
+Estamos introduciendo un orden artificial
+si la variable es nominal.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Error 3}
+
+\begin{center}
+
+\Large
+``Cuantas más features tenga,
+mejor será el modelo.''
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Incorrecto}
+Las variables irrelevantes pueden aumentar ruido y complejidad.
+\end{alertblock}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Error 4}
+
+\begin{center}
+
+\Large
+``Si una variable mejora mucho el modelo,
+debe ser excelente.''
+\end{center}
+
+\vspace{0.5cm}
+
+Primero preguntar:
+
+\begin{center}
+
+¿Existe en el momento real de predicción?
+\end{center}
+
+Puede ser:
+
+\[
+\boxed{
+Leakage
+}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Error 5}
+
+\begin{center}
+
+\Large
+``Todos los algoritmos necesitan StandardScaler.''
+\end{center}
+
+\vspace{0.5cm}
+
+No.
+
+El preprocessing depende de:
+
+\begin{itemize}
+
+    \item algoritmo;
+
+    \item distribución;
+
+    \item objetivo;
+
+    \item tipo de datos.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+\section{Pipeline conceptual}
+% ============================================================
+
+\begin{frame}{Pipeline de Feature Engineering}
+
+\begin{center}
+
+\begin{tikzpicture}[
+node distance=0.28cm,
+every node/.style={
+draw,
+rounded corners,
+fill=azulclaro,
+minimum width=3cm,
+minimum height=0.43cm,
+font=\scriptsize
+}
+]
+
+\node (raw) {Datos crudos};
+
+\node[below=of raw] (split) {Train/Test};
+
+\node[below=of split] (num) {Transformar numéricas};
+
+\node[below=of num] (cat) {Codificar categóricas};
+
+\node[below=of cat] (create) {Crear features};
+
+\node[below=of create] (pipe) {Pipeline};
+
+\node[below=of pipe] (model) {Modelo};
+
+\node[below=of model] (metric) {Evaluar};
+
+\node[below=of metric] (compare) {Comparar};
+
+\node[below=of compare] (keep) {Conservar mejoras};
+
+\draw[-{Latex}] (raw) -- (split);
+\draw[-{Latex}] (split) -- (num);
+\draw[-{Latex}] (num) -- (cat);
+\draw[-{Latex}] (cat) -- (create);
+\draw[-{Latex}] (create) -- (pipe);
+\draw[-{Latex}] (pipe) -- (model);
+\draw[-{Latex}] (model) -- (metric);
+\draw[-{Latex}] (metric) -- (compare);
+\draw[-{Latex}] (compare) -- (keep);
+
+\end{tikzpicture}
+
+\end{center}
+
+\end{frame}
+
+% ============================================================
+\section{Herramientas}
+% ============================================================
+
+\begin{frame}{Herramientas que vimos}
+
+\scriptsize
+
+\begin{table}
+\centering
+
+\begin{tabular}{ll}
+\toprule
+\textbf{Objetivo} & \textbf{Herramienta} \\
+\midrule
+
+Estandarizar &
+\texttt{StandardScaler()} \\
+
+Normalizar &
+\texttt{MinMaxScaler()} \\
+
+One-Hot &
+\texttt{OneHotEncoder()} \\
+
+Ordinal &
+\texttt{OrdinalEncoder()} \\
+
+Binning &
+\texttt{pd.cut()} \\
+
+Log &
+\texttt{np.log1p()} \\
+
+Polinomios &
+\texttt{PolynomialFeatures()} \\
+
+Transformar columnas &
+\texttt{ColumnTransformer()} \\
+
+Pipeline &
+\texttt{Pipeline()} \\
+
+\bottomrule
+\end{tabular}
+
+\end{table}
+
+\end{frame}
+
+% ============================================================
+\section{Ideas clave}
+% ============================================================
+
+\begin{frame}{15 ideas que deben recordar}
+
+\scriptsize
+
+\begin{enumerate}
+
+    \item Los modelos aprenden de la representación que les damos.
+
+    \item No toda columna debe ser una feature.
+
+    \item IDs normalmente no aportan significado predictivo directo.
+
+    \item Siempre debemos investigar leakage.
+
+    \item La escala importa para algunos algoritmos.
+
+    \item StandardScaler centra y escala.
+
+    \item MinMaxScaler lleva normalmente a $[0,1]$.
+
+    \item One-Hot Encoding sirve para categorías nominales.
+
+    \item Ordinal Encoding requiere un orden real.
+
+    \item Binning simplifica pero pierde información.
+
+    \item Transformaciones logarítmicas pueden reducir asimetría.
+
+    \item Ratios pueden capturar información de negocio.
+
+    \item Interacciones permiten representar relaciones más complejas.
+
+    \item El preprocessing debe aprenderse solamente con Train.
+
+    \item Pipeline ayuda a construir procesos reproducibles y seguros.
+
+\end{enumerate}
+
+\end{frame}
+
+% ============================================================
+\section{Pregunta final}
+% ============================================================
+
+\begin{frame}{Pregunta de salida 1}
+
+Tenemos:
+
+\[
+Edad=30
+\]
+
+\[
+Ingreso=800000
+\]
+
+y utilizaremos:
+
+\[
+KNN
+\]
+
+\vspace{0.5cm}
+
+\begin{alertblock}{Pregunta}
+¿Qué transformación investigaríamos primero?
+\end{alertblock}
+
+Una posibilidad:
+
+\[
+\boxed{
+Escalamiento
+}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Pregunta de salida 2}
+
+Tenemos:
+
+\begin{center}
+
+Centro
+
+Norte
+
+Sur
+\end{center}
+
+sin orden natural.
+
+\vspace{0.4cm}
+
+¿Qué utilizaríamos?
+
+\[
+\boxed{
+One-Hot\ Encoding
+}
+\]
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Pregunta de salida 3}
+
+Calculamos:
+
+\[
+StandardScaler.fit(X)
+\]
+
+antes de separar Train/Test.
+
+¿Qué problema existe?
+
+\[
+\boxed{
+Data\ Leakage
+}
+\]
+
+\end{frame}
+
+% ============================================================
+\section{Puente a Regresión}
+% ============================================================
+
+\begin{frame}{Ya tenemos mejores variables}
+
+Ahora podemos construir:
+
+\[
+X
+\]
+
+de mejor calidad.
+
+Pero todavía falta comprender profundamente:
+
+\begin{center}
+
+\Huge
+¿cómo aprende una regresión?
+\end{center}
+
+\end{frame}
+
+% ------------------------------------------------------------
+
+\begin{frame}{Próxima clase}
+
+\begin{center}
+
+{\Huge
+\textbf{Clase 11}
+}
+
+\vspace{0.4cm}
+
+{\LARGE
+\textcolor{azulmarista}{
+\textbf{Regresión}
+}
+}
+
+\vspace{0.3cm}
+
+{\Large
+Predicción de variables numéricas
+}
+
+\end{center}
+
+\vspace{0.5cm}
+
+Veremos:
+
+\begin{itemize}
+
+    \item regresión lineal simple;
+
+    \item mínimos cuadrados;
+
+    \item pendiente e intercepto;
+
+    \item regresión múltiple;
+
+    \item interpretación de coeficientes;
+
+    \item supuestos;
+
+    \item residuos;
+
+    \item MAE;
+
+    \item RMSE;
+
+    \item $R^2$;
+
+    \item regularización;
+
+    \item Ridge;
+
+    \item Lasso.
+
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+% CIERRE
+% ============================================================
+
+\begin{frame}
+
+\begin{center}
+
+{\Huge
+\textcolor{azulmarista}{
+\textbf{Feature Engineering}
+}
+}
+
+\vspace{0.8cm}
+
+{\Large
+El algoritmo importa.
+}
+
+\vspace{0.4cm}
+
+{\Large
+Pero también importa
+}
+
+\vspace{0.3cm}
+
+{\LARGE
+\textbf{cómo representamos el problema.}
+}
+
+\vspace{0.8cm}
+
+\textbf{Diplomado de Python y Análisis de Datos}
+
+\vspace{0.2cm}
+
+\textbf{Universidad Marista}
+
+\end{center}
+
+\end{frame}
+
+% ============================================================
+
+\end{document}
